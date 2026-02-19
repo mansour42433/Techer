@@ -3,1918 +3,1334 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TimeTable Pro - نظام الجداول المدرسي</title>
+<title>TimeTable Pro V3</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
-:root {
-  --sidebar-w: 220px;
-  --header-h: 52px;
-  --bg: #f0f4f8;
-  --sidebar-bg: #0d1b2a;
-  --sidebar-hover: #1a2e45;
-  --sidebar-active: #1a56db;
-  --accent: #1a56db;
-  --accent-light: #dbeafe;
-  --danger: #ef4444;
-  --success: #10b981;
-  --warn: #f59e0b;
-  --card-bg: #ffffff;
-  --border: #e2e8f0;
-  --text: #1e293b;
-  --muted: #64748b;
-  --period-h: 64px;
+:root{
+  --sw:228px;--hh:52px;
+  --bg:#eef2f7;--sb:#0b1628;--sbh:#162338;--acc:#1a56db;--acc2:#1648c8;
+  --card:#fff;--border:#e2e8f0;--text:#1e293b;--muted:#64748b;
+  --danger:#ef4444;--success:#10b981;--warn:#f59e0b;--info:#06b6d4;
 }
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Cairo', sans-serif; background: var(--bg); color: var(--text); display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--text);display:flex;flex-direction:column;height:100vh;overflow:hidden}
 
-/* ─── HEADER ─── */
-.app-header {
-  height: var(--header-h);
-  background: #0d1b2a;
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 16px;
-  flex-shrink: 0;
-  border-bottom: 2px solid var(--accent);
-  z-index: 100;
-}
-.app-header .logo { display: flex; align-items: center; gap: 10px; }
-.app-header .logo i { color: var(--accent); font-size: 20px; }
-.app-header .logo h1 { font-size: 15px; font-weight: 700; }
-.app-header .logo span { font-size: 10px; color: #94a3b8; display: block; font-weight: 300; }
-.header-actions { display: flex; gap: 8px; }
-.hbtn {
-  background: rgba(255,255,255,0.1);
-  border: 1px solid rgba(255,255,255,0.15);
-  color: white;
-  padding: 5px 12px;
-  border-radius: 6px;
-  font-size: 12px;
-  cursor: pointer;
-  font-family: 'Cairo', sans-serif;
-  display: flex; align-items: center; gap: 6px;
-  transition: background 0.15s;
-}
-.hbtn:hover { background: rgba(255,255,255,0.18); }
-.hbtn.primary { background: var(--accent); border-color: var(--accent); }
-.hbtn.primary:hover { background: #1648c8; }
+/* ── HEADER ── */
+.hdr{height:var(--hh);background:var(--sb);color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 16px;flex-shrink:0;border-bottom:2px solid var(--acc)}
+.hdr-logo{display:flex;align-items:center;gap:10px}
+.hdr-logo i{color:var(--acc);font-size:20px}
+.hdr-logo h1{font-size:15px;font-weight:700}
+.hdr-logo span{font-size:10px;color:#94a3b8;display:block}
+.hbtn{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);color:#fff;padding:5px 12px;border-radius:6px;font-size:12px;cursor:pointer;font-family:'Cairo',sans-serif;display:flex;align-items:center;gap:6px;transition:.15s}
+.hbtn:hover{background:rgba(255,255,255,.2)}
+.hbtn.acc{background:var(--acc);border-color:var(--acc)}
+.hbtn.acc:hover{background:var(--acc2)}
 
-/* ─── BODY LAYOUT ─── */
-.app-body { display: flex; flex: 1; overflow: hidden; }
+/* ── BODY ── */
+.body-wrap{display:flex;flex:1;overflow:hidden}
 
-/* ─── SIDEBAR ─── */
-.sidebar {
-  width: var(--sidebar-w);
-  background: var(--sidebar-bg);
-  flex-shrink: 0;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-.sidebar-nav { flex: 1; padding: 8px; overflow-y: auto; }
-.nav-group-label {
-  color: #4a5568;
-  font-size: 10px;
-  font-weight: 600;
-  padding: 12px 8px 4px;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-}
-.nav-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 9px 12px;
-  border-radius: 8px;
-  cursor: pointer;
-  color: #94a3b8;
-  font-size: 13px;
-  font-weight: 500;
-  transition: all 0.15s;
-  margin-bottom: 2px;
-}
-.nav-item i { width: 16px; text-align: center; font-size: 14px; }
-.nav-item:hover { background: var(--sidebar-hover); color: #e2e8f0; }
-.nav-item.active { background: var(--sidebar-active); color: white; font-weight: 600; }
-.nav-item .badge {
-  margin-right: auto;
-  background: rgba(255,255,255,0.15);
-  color: white;
-  font-size: 10px;
-  padding: 1px 7px;
-  border-radius: 10px;
-}
-.sidebar-footer {
-  padding: 12px;
-  border-top: 1px solid #1a2e45;
-}
-.school-name-display {
-  color: #64748b;
-  font-size: 11px;
-  text-align: center;
-  cursor: pointer;
-}
-.school-name-display span { color: #94a3b8; font-weight: 600; display: block; margin-top: 2px; }
+/* ── SIDEBAR ── */
+.sb{width:var(--sw);background:var(--sb);flex-shrink:0;display:flex;flex-direction:column;overflow:hidden}
+.sb-nav{flex:1;padding:8px;overflow-y:auto}
+.nl{color:#374151;font-size:9.5px;font-weight:700;padding:10px 8px 4px;letter-spacing:.06em;text-transform:uppercase}
+.ni{display:flex;align-items:center;gap:9px;padding:8px 12px;border-radius:8px;cursor:pointer;color:#94a3b8;font-size:13px;font-weight:500;transition:.15s;margin-bottom:1px}
+.ni i{width:16px;text-align:center;font-size:13px}
+.ni:hover{background:var(--sbh);color:#e2e8f0}
+.ni.on{background:var(--acc);color:#fff;font-weight:600}
+.ni .badge{margin-right:auto;background:rgba(255,255,255,.18);color:#fff;font-size:10px;padding:1px 7px;border-radius:10px}
+.sb-ft{padding:12px;border-top:1px solid #1a2e45;color:#4b5563;font-size:11px;text-align:center;cursor:pointer}
+.sb-ft span{color:#94a3b8;font-weight:600;display:block;margin-top:2px}
 
-/* ─── MAIN CONTENT ─── */
-.main-content { flex: 1; overflow: hidden; display: flex; flex-direction: column; }
+/* ── MAIN ── */
+.main{flex:1;overflow:hidden;display:flex;flex-direction:column}
+.tp{display:none;flex:1;overflow:hidden;flex-direction:column}
+.tp.on{display:flex}
 
-/* ─── TABS ─── */
-.tab-pane { display: none; flex: 1; overflow: hidden; }
-.tab-pane.active { display: flex; flex-direction: column; }
+/* ── SHARED UI ── */
+.sh{padding:11px 20px;background:#fff;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.sh h2{font-size:14px;font-weight:700}
+.sb2{flex:1;overflow-y:auto;padding:15px 20px}
+.btn{padding:6px 14px;border-radius:8px;font-size:12px;font-weight:600;font-family:'Cairo',sans-serif;cursor:pointer;border:none;display:inline-flex;align-items:center;gap:5px;transition:.15s}
+.bp{background:var(--acc);color:#fff}.bp:hover{background:var(--acc2)}
+.bd{background:#fee2e2;color:var(--danger)}.bd:hover{background:#fecaca}
+.bs{background:#f1f5f9;color:var(--text)}.bs:hover{background:#e2e8f0}
+.bw{background:#fef3c7;color:#92400e}.bw:hover{background:#fde68a}
+.bv{background:#d1fae5;color:#065f46}.bv:hover{background:#a7f3d0}
+.bi{background:#dbeafe;color:#1d4ed8}.bi:hover{background:#bfdbfe}
+.bsm{padding:4px 9px;font-size:11px}
+.dtbl{width:100%;background:#fff;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,.06);overflow:hidden}
+.dtbl table{width:100%;border-collapse:collapse}
+.dtbl th{background:#f8fafc;padding:9px 12px;text-align:right;font-size:11px;color:var(--muted);font-weight:600;border-bottom:1px solid var(--border)}
+.dtbl td{padding:8px 12px;font-size:12px;border-bottom:1px solid #f1f5f9;vertical-align:middle}
+.dtbl tr:last-child td{border-bottom:none}
+.dtbl tr:hover td{background:#fafbfc}
+.tag{display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:600}
+.es{text-align:center;padding:40px 20px;color:var(--muted)}
+.es i{font-size:36px;margin-bottom:10px;color:#cbd5e1;display:block}
+.es p{font-size:13px}
 
-/* ─── DASHBOARD ─── */
-.dashboard-body { flex: 1; overflow-y: auto; padding: 20px; }
-.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 14px; margin-bottom: 20px; }
-.stat-card {
-  background: white;
-  border-radius: 12px;
-  padding: 18px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-.stat-icon {
-  width: 44px; height: 44px;
-  border-radius: 10px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 18px;
-  flex-shrink: 0;
-}
-.stat-card h3 { font-size: 11px; color: var(--muted); margin-bottom: 2px; }
-.stat-card p { font-size: 26px; font-weight: 700; line-height: 1; }
+/* ── MODAL ── */
+.mov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:999;align-items:center;justify-content:center}
+.mov.on{display:flex}
+.mbox{background:#fff;border-radius:16px;width:90%;max-width:520px;box-shadow:0 20px 60px rgba(0,0,0,.3);overflow:hidden;animation:mIn .2s ease}
+.mbox.wide{max-width:780px}
+@keyframes mIn{from{transform:translateY(-14px) scale(.97);opacity:0}to{transform:none;opacity:1}}
+.mhd{background:var(--acc);color:#fff;padding:13px 18px;display:flex;align-items:center;justify-content:space-between}
+.mhd h3{font-size:14px;font-weight:700}
+.mhd button{background:none;border:none;color:#fff;cursor:pointer;font-size:15px}
+.mbd{padding:18px;max-height:72vh;overflow-y:auto}
+.mft{padding:11px 18px;background:#f8fafc;border-top:1px solid var(--border);display:flex;gap:8px;justify-content:flex-end}
+.fg{margin-bottom:13px}
+.fg label{display:block;font-size:12px;font-weight:600;color:var(--text);margin-bottom:4px}
+.fg input,.fg select,.fg textarea{width:100%;padding:7px 11px;border:1px solid var(--border);border-radius:8px;font-size:12px;font-family:'Cairo',sans-serif;outline:none;transition:.15s}
+.fg input:focus,.fg select:focus{border-color:var(--acc);box-shadow:0 0 0 3px rgba(26,86,219,.1)}
+.fg2{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.fg3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:11px}
+.day-btn{padding:5px 9px;border:2px solid var(--border);border-radius:8px;font-size:11px;font-weight:600;cursor:pointer;background:#fff;color:var(--muted);font-family:'Cairo',sans-serif;transition:.15s;user-select:none}
+.day-btn.on{background:var(--acc);border-color:var(--acc);color:#fff}
+.csw{display:flex;gap:5px;flex-wrap:wrap}
+.cs{width:22px;height:22px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:.1s}
+.cs:hover{transform:scale(1.2)}
+.cs.on{border-color:#1e293b;transform:scale(1.25)}
 
-.info-card {
-  background: white;
-  border-radius: 12px;
-  padding: 20px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
-  margin-bottom: 14px;
+/* ── CONSTRAINTS PANEL ── */
+.cst-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;margin-bottom:16px}
+.cst-card{background:#fff;border-radius:12px;padding:14px;box-shadow:0 1px 4px rgba(0,0,0,.06);border:1px solid var(--border)}
+.cst-card h4{font-size:12px;font-weight:700;margin-bottom:10px;display:flex;align-items:center;gap:7px}
+.slot-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:3px}
+.slot-btn{
+  aspect-ratio:1;border-radius:5px;border:none;cursor:pointer;font-size:10px;font-weight:600;
+  transition:.12s;font-family:'Cairo',sans-serif;
+  background:#f1f5f9;color:var(--muted);
 }
-.info-card h4 { font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
-.info-card ol { padding-right: 20px; }
-.info-card li { font-size: 13px; color: var(--muted); margin-bottom: 6px; line-height: 1.6; }
+.slot-btn:hover{background:#dbeafe;color:var(--acc)}
+.slot-btn.blocked{background:#fee2e2;color:var(--danger)}
+.slot-btn.preferred{background:#d1fae5;color:#065f46}
+.slot-day-label{font-size:9px;font-weight:700;color:var(--muted);text-align:center;padding:2px 0}
 
-/* ─── SECTION PAGES (Classes, Teachers, Assignments) ─── */
-.section-header {
-  padding: 14px 20px;
-  background: white;
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-shrink: 0;
-}
-.section-header h2 { font-size: 15px; font-weight: 700; }
-.section-body { flex: 1; overflow-y: auto; padding: 16px 20px; }
+/* ── CONSTRAINT LEGEND ── */
+.cst-legend{display:flex;gap:12px;flex-wrap:wrap;font-size:11px;margin-bottom:10px;align-items:center}
+.cst-legend span{display:flex;align-items:center;gap:4px}
+.dot{width:10px;height:10px;border-radius:3px;display:inline-block}
 
-.btn {
-  padding: 7px 16px;
-  border-radius: 8px;
-  font-size: 12px;
-  font-weight: 600;
-  font-family: 'Cairo', sans-serif;
-  cursor: pointer;
-  border: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  transition: all 0.15s;
-}
-.btn-primary { background: var(--accent); color: white; }
-.btn-primary:hover { background: #1648c8; }
-.btn-danger { background: #fee2e2; color: var(--danger); }
-.btn-danger:hover { background: #fecaca; }
-.btn-secondary { background: #f1f5f9; color: var(--text); }
-.btn-secondary:hover { background: #e2e8f0; }
-.btn-success { background: #d1fae5; color: #065f46; }
-.btn-success:hover { background: #a7f3d0; }
-.btn-warn { background: #fef3c7; color: #92400e; }
-.btn-warn:hover { background: #fde68a; }
-.btn-sm { padding: 4px 10px; font-size: 11px; }
+/* ── GENERATOR ── */
+.gen-body{flex:1;overflow-y:auto;padding:20px}
+.gen-card{max-width:620px;margin:0 auto;background:#fff;border-radius:16px;padding:28px;box-shadow:0 2px 12px rgba(0,0,0,.08)}
+.gen-title{text-align:center;margin-bottom:20px}
+.gen-title i{font-size:44px;color:var(--acc);display:block;margin-bottom:10px}
+.gen-title h2{font-size:20px;font-weight:800;margin-bottom:6px}
+.gen-title p{color:var(--muted);font-size:12px;line-height:1.7}
+.algo-opts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}
+.algo-opt{border:2px solid var(--border);border-radius:10px;padding:12px;cursor:pointer;transition:.15s;background:#fff}
+.algo-opt:hover{border-color:var(--acc);background:#f0f6ff}
+.algo-opt.on{border-color:var(--acc);background:#eff6ff}
+.algo-opt h5{font-size:12px;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:6px}
+.algo-opt p{font-size:11px;color:var(--muted);line-height:1.5}
+.opt-section{background:#f8fafc;border-radius:10px;padding:12px;margin-bottom:14px;border:1px solid var(--border)}
+.opt-section h4{font-size:12px;font-weight:700;margin-bottom:10px;display:flex;align-items:center;gap:6px;color:var(--text)}
+.opt-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.opt-row label{font-size:12px;color:var(--text)}
+.opt-row input[type=range]{width:120px;accent-color:var(--acc)}
+.opt-row .oval{font-size:11px;font-weight:700;color:var(--acc);min-width:24px;text-align:center}
+.toggle-sw{position:relative;width:38px;height:20px;cursor:pointer}
+.toggle-sw input{opacity:0;width:0;height:0;position:absolute}
+.toggle-track{position:absolute;inset:0;background:#cbd5e1;border-radius:99px;transition:.2s}
+.toggle-thumb{position:absolute;width:16px;height:16px;border-radius:50%;background:#fff;top:2px;right:2px;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.toggle-sw input:checked~.toggle-track{background:var(--acc)}
+.toggle-sw input:checked~.toggle-thumb{right:calc(100% - 18px)}
+.pb-wrap{background:#f1f5f9;border-radius:999px;height:10px;overflow:hidden;margin:14px 0;display:none}
+.pb-fill{height:100%;background:linear-gradient(90deg,var(--acc),#38bdf8,var(--success));border-radius:999px;width:0;transition:width .18s}
+.gen-logs{background:#0b1628;color:#38bdf8;border-radius:8px;padding:12px;font-size:11px;text-align:right;max-height:160px;overflow-y:auto;display:none;margin-top:12px;line-height:1.9;font-family:monospace}
+.gen-logs .ok{color:#34d399}
+.gen-logs .err{color:#f87171}
+.gen-logs .info{color:#fbbf24}
+.score-bar{display:flex;align-items:center;gap:8px;margin-top:10px;display:none}
+.score-bar .sl{font-size:12px;color:var(--muted)}
+.score-bar .sv{font-size:18px;font-weight:800;color:var(--acc)}
 
-.data-table {
-  width: 100%;
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
-  overflow: hidden;
-}
-.data-table table { width: 100%; border-collapse: collapse; }
-.data-table th { background: #f8fafc; padding: 10px 14px; text-align: right; font-size: 12px; color: var(--muted); font-weight: 600; border-bottom: 1px solid var(--border); }
-.data-table td { padding: 10px 14px; font-size: 13px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
-.data-table tr:last-child td { border-bottom: none; }
-.data-table tr:hover td { background: #fafbfc; }
+/* ── TIMETABLE ── */
+.tt-wrap{flex:1;display:flex;overflow:hidden}
+.tt-pool{width:215px;flex-shrink:0;background:#fff;border-left:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
+.ph{padding:11px 13px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.ph .pt{font-size:13px;font-weight:700}
+.ph .pc{font-size:11px;font-weight:700;padding:2px 8px;border-radius:10px;color:#fff}
+.pb2{flex:1;overflow-y:auto;padding:8px;display:flex;flex-direction:column;gap:5px}
 
-.tag {
-  display: inline-block;
-  padding: 2px 8px;
-  border-radius: 999px;
-  font-size: 11px;
-  font-weight: 600;
-}
+.pc-card{border-radius:10px;color:#fff;padding:8px 10px;cursor:grab;user-select:none;transition:transform .12s,box-shadow .12s,opacity .12s;display:flex;flex-direction:column;gap:3px;border:2px solid rgba(255,255,255,.22);position:relative}
+.pc-card:hover{transform:scale(1.03);box-shadow:0 5px 16px rgba(0,0,0,.25)}
+.pc-card.dragging{opacity:.3;transform:scale(.95)}
+.pc-card .ps{font-size:12px;font-weight:700;line-height:1.2}
+.pc-card .pm{font-size:10px;opacity:.85}
+.pc-card .pn{position:absolute;top:5px;left:8px;background:rgba(0,0,0,.3);color:#fff;font-size:10px;font-weight:700;padding:1px 5px;border-radius:7px}
 
-/* ─── MODAL ─── */
-.modal-overlay {
-  display: none;
-  position: fixed; inset: 0;
-  background: rgba(0,0,0,0.45);
-  z-index: 999;
-  align-items: center;
-  justify-content: center;
-}
-.modal-overlay.open { display: flex; }
-.modal-box {
-  background: white;
-  border-radius: 16px;
-  width: 90%;
-  max-width: 480px;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-  overflow: hidden;
-  animation: modalIn 0.2s ease;
-}
-@keyframes modalIn { from { transform: translateY(-20px) scale(0.97); opacity: 0; } to { transform: none; opacity: 1; } }
-.modal-header {
-  background: var(--accent);
-  color: white;
-  padding: 14px 20px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.modal-header h3 { font-size: 15px; font-weight: 700; }
-.modal-header button { background: none; border: none; color: white; cursor: pointer; font-size: 16px; }
-.modal-body { padding: 20px; }
-.modal-footer { padding: 12px 20px; background: #f8fafc; border-top: 1px solid var(--border); display: flex; gap: 8px; justify-content: flex-end; }
+.tt-main{flex:1;display:flex;flex-direction:column;overflow:hidden;background:var(--bg)}
+.tbar{padding:9px 14px;background:#fff;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:9px;flex-shrink:0;flex-wrap:wrap}
+.vtabs{display:flex;gap:3px}
+.vt{padding:5px 13px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:#fff;color:var(--muted);font-family:'Cairo',sans-serif;transition:.15s}
+.vt.on{background:var(--acc);border-color:var(--acc);color:#fff}
+.tbar select{border:1px solid var(--border);border-radius:8px;padding:5px 9px;font-size:12px;font-family:'Cairo',sans-serif;outline:none;cursor:pointer;flex:1;max-width:210px}
+.tbar select:focus{border-color:var(--acc)}
+.narr{display:flex;gap:3px}
+.narr button{width:27px;height:27px;border:1px solid var(--border);border-radius:6px;background:#fff;cursor:pointer;font-size:11px;display:flex;align-items:center;justify-content:center;transition:.1s}
+.narr button:hover{background:var(--acc);border-color:var(--acc);color:#fff}
+#cbadge{display:none;background:#fee2e2;color:#991b1b;padding:3px 9px;border-radius:6px;font-size:11px;font-weight:700;align-items:center;gap:4px}
 
-.form-group { margin-bottom: 14px; }
-.form-group label { display: block; font-size: 12px; font-weight: 600; color: var(--text); margin-bottom: 5px; }
-.form-group input, .form-group select {
-  width: 100%;
-  padding: 8px 12px;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  font-size: 13px;
-  font-family: 'Cairo', sans-serif;
-  transition: border-color 0.15s;
-  outline: none;
-}
-.form-group input:focus, .form-group select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(26,86,219,0.1); }
-.form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.tgw{flex:1;overflow:auto;padding:14px}
+.ttbl{border-collapse:separate;border-spacing:0;width:100%;background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.08)}
+.ttbl th{background:#1e293b;color:#fff;padding:8px 5px;text-align:center;font-size:11px;font-weight:600;font-family:'Cairo',sans-serif;white-space:nowrap}
+.ttbl th.dth{background:#0b1628;font-size:12px;border-left:1px solid #2d3f52;min-width:55px}
+.ttbl th.eth{background:var(--acc);text-align:right;padding:8px 12px}
+.ttbl th.pth{min-width:86px}
 
-/* Working days selector */
-.days-selector { display: flex; gap: 6px; flex-wrap: wrap; }
-.day-btn {
-  padding: 5px 10px;
-  border: 2px solid var(--border);
-  border-radius: 8px;
-  font-size: 12px;
-  font-weight: 600;
-  cursor: pointer;
-  background: white;
-  color: var(--muted);
-  font-family: 'Cairo', sans-serif;
-  transition: all 0.15s;
-  user-select: none;
-}
-.day-btn.active { background: var(--accent); border-color: var(--accent); color: white; }
-.day-btn.off { background: #fee2e2; border-color: #fca5a5; color: var(--danger); text-decoration: line-through; }
+.tc{height:66px;border:1px solid #e4eaf2;padding:3px;vertical-align:top;position:relative;transition:background .1s;min-width:86px}
+.tc.off{background:repeating-linear-gradient(45deg,#fef2f2,#fef2f2 3px,#fff8f8 3px,#fff8f8 9px)}
+.tc.dho{background:#dbeafe!important;outline:2px dashed var(--acc);outline-offset:-2px}
+.tc.dok{background:#d1fae5!important}
+.tc.dno{background:#fee2e2!important;outline:2px dashed var(--danger);outline-offset:-2px}
+.tc.blocked-slot{background:#fdf4ff;border:1px solid #e9d5ff}
 
-/* ─── TIMETABLE VIEW ─── */
-.tt-container { flex: 1; display: flex; overflow: hidden; }
+.cl{height:100%;border-radius:8px;padding:4px 7px;color:#fff;font-size:10px;font-weight:600;display:flex;flex-direction:column;justify-content:space-between;cursor:grab;position:relative;overflow:hidden;transition:transform .1s,box-shadow .1s}
+.cl:hover{transform:scale(1.03);box-shadow:0 4px 12px rgba(0,0,0,.22)}
+.cl.dragging{opacity:.3}
+.cl::after{content:'';position:absolute;top:0;right:0;width:3px;height:100%;background:rgba(255,255,255,.28)}
+.cl .cs2{font-size:11px;font-weight:700}
+.cl .cm2{font-size:10px;opacity:.85}
+.cdel{position:absolute;top:2px;left:2px;width:15px;height:15px;border-radius:50%;background:rgba(0,0,0,.28);color:#fff;border:none;cursor:pointer;font-size:8px;display:none;align-items:center;justify-content:center;transition:background .1s;z-index:5}
+.tc:hover .cdel{display:flex}
+.cdel:hover{background:rgba(239,68,68,.8)}
+.cph{height:100%;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#d1d5db;font-size:18px;transition:all .15s}
+.tc:hover .cph{background:#f8fafc;color:#94a3b8}
 
-/* LEFT PANEL: Unscheduled Lessons (in RTL it's on the right) */
-.tt-panel {
-  width: 200px;
-  background: white;
-  border-right: 1px solid var(--border); /* in RTL: left side visually */
-  flex-shrink: 0;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-/* RTL: border-right is border on the left visually */
-html[dir=rtl] .tt-panel { border-right: none; border-left: 1px solid var(--border); }
+/* ── OVERVIEW ── */
+.ovw{flex:1;overflow:auto;padding:14px}
+.ovtbl{border-collapse:collapse;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.08);width:max-content;min-width:100%}
+.ovtbl th,.ovtbl td{border:1px solid #e8edf3;padding:3px;font-size:10px;text-align:center;white-space:nowrap;height:34px;min-width:54px}
+.ovtbl th{background:#1e293b;color:#fff;font-weight:600}
+.ovtbl th.sc{background:#0b1628;position:sticky;right:0;z-index:5;min-width:128px;text-align:right;padding:3px 9px}
+.ovtbl td.sc{position:sticky;right:0;background:#f8fafc;z-index:5;font-weight:600;text-align:right;padding:3px 9px;border-left:2px solid #cbd5e1}
+.ovtbl .ds{border-left:2px solid #94a3b8!important}
+.ovtbl .oc{background:#fff8f8}
+.oc2{display:inline-block;padding:2px 5px;border-radius:4px;color:#fff;font-size:9px;font-weight:700}
 
-.tt-panel-header {
-  padding: 12px;
-  border-bottom: 1px solid var(--border);
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--text);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.tt-panel-header .count {
-  background: var(--danger);
-  color: white;
-  border-radius: 10px;
-  padding: 1px 7px;
-  font-size: 10px;
-}
-.tt-panel-header .count.green { background: var(--success); }
+/* ── REPORTS ── */
+.rpg{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:14px}
+.rpc{background:#fff;border-radius:12px;padding:14px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.rpc h4{font-size:12px;font-weight:700;margin-bottom:9px;display:flex;align-items:center;justify-content:space-between}
+.lb-w{margin-bottom:5px}
+.lb-t{display:flex;justify-content:space-between;font-size:10px;color:var(--muted);margin-bottom:3px}
+.lb{height:7px;background:#f1f5f9;border-radius:99px;overflow:hidden}
+.lbf{height:100%;border-radius:99px;transition:width .4s}
 
-.unscheduled-pool {
-  flex: 1;
-  overflow-y: auto;
-  padding: 8px;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
+/* ── DRAG GHOST ── */
+#dg{position:fixed;z-index:9999;pointer-events:none;opacity:.9;transform:translate(-50%,-52%);border-radius:9px;padding:7px 12px;color:#fff;font-size:12px;font-weight:700;font-family:'Cairo',sans-serif;box-shadow:0 8px 24px rgba(0,0,0,.35);display:none;white-space:nowrap;border:2px solid rgba(255,255,255,.3)}
 
-.lesson-card {
-  padding: 7px 9px;
-  border-radius: 8px;
-  color: white;
-  font-size: 11px;
-  font-weight: 600;
-  cursor: grab;
-  user-select: none;
-  transition: transform 0.1s, box-shadow 0.1s;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  border: 2px solid transparent;
-}
-.lesson-card:active { cursor: grabbing; }
-.lesson-card[draggable=true]:hover { transform: scale(1.03); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
-.lesson-card .lc-subject { font-size: 12px; font-weight: 700; }
-.lesson-card .lc-meta { font-size: 10px; opacity: 0.85; }
-.lesson-card .lc-count {
-  align-self: flex-end;
-  background: rgba(255,255,255,0.25);
-  border-radius: 6px;
-  padding: 1px 6px;
-  font-size: 10px;
-  margin-top: 2px;
-}
-.lesson-card.dragging { opacity: 0.5; transform: scale(0.97); }
+/* ── SCORE WIDGET ── */
+.score-widget{background:linear-gradient(135deg,#1a56db,#0ea5e9);color:#fff;border-radius:10px;padding:10px 14px;display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.score-widget .sw-val{font-size:28px;font-weight:900;line-height:1}
+.score-widget .sw-lbl{font-size:11px;opacity:.85}
+.score-widget .sw-sub{font-size:10px;opacity:.7;margin-top:2px}
+.score-bars{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.score-item{background:#f8fafc;border-radius:8px;padding:8px 10px;border:1px solid var(--border)}
+.score-item .si-lbl{font-size:10px;color:var(--muted);margin-bottom:4px}
+.score-item .si-val{font-size:14px;font-weight:700}
 
-/* ─── MAIN TIMETABLE GRID ─── */
-.tt-main {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-.tt-toolbar {
-  padding: 10px 16px;
-  background: white;
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  flex-shrink: 0;
-}
-.tt-toolbar .view-tabs { display: flex; gap: 4px; }
-.view-tab {
-  padding: 5px 14px;
-  border-radius: 6px;
-  font-size: 12px;
-  font-weight: 600;
-  cursor: pointer;
-  border: 1px solid var(--border);
-  background: white;
-  color: var(--muted);
-  font-family: 'Cairo', sans-serif;
-  transition: all 0.15s;
-}
-.view-tab.active { background: var(--accent); border-color: var(--accent); color: white; }
-.tt-toolbar select {
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 5px 10px;
-  font-size: 13px;
-  font-family: 'Cairo', sans-serif;
-  outline: none;
-  cursor: pointer;
-}
-.tt-toolbar select:focus { border-color: var(--accent); }
-.nav-arrows { display: flex; gap: 4px; }
-.nav-arrows button {
-  width: 28px; height: 28px;
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  background: white;
-  cursor: pointer;
-  font-size: 12px;
-  display: flex; align-items: center; justify-content: center;
-  transition: all 0.1s;
-}
-.nav-arrows button:hover { background: var(--accent); border-color: var(--accent); color: white; }
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:3px}
 
-.tt-grid-wrapper { flex: 1; overflow: auto; padding: 16px; }
-
-.tt-grid {
-  min-width: 500px;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-  background: white;
+@media print{
+  .sb,.hdr,.tbar,.tt-pool,.mov,#dg{display:none!important}
+  body{overflow:visible}
+  .body-wrap,.main,.tp,.tt-wrap,.tt-main,.tgw{overflow:visible;height:auto}
+  .cdel{display:none!important}
 }
-.tt-grid table { width: 100%; border-collapse: collapse; }
-.tt-grid th {
-  background: #1e293b;
-  color: white;
-  padding: 10px 8px;
-  text-align: center;
-  font-size: 12px;
-  font-weight: 600;
-}
-.tt-grid th.day-header { background: #0d1b2a; font-size: 13px; }
-.tt-grid th.entity-header { background: #1a56db; text-align: right; padding: 10px 14px; min-width: 120px; }
-
-.tt-cell {
-  height: var(--period-h);
-  border: 1px solid #e8edf3;
-  vertical-align: top;
-  padding: 3px;
-  min-width: 80px;
-  position: relative;
-  transition: background 0.1s;
-}
-.tt-cell.off-day { background: #fef2f2; }
-.tt-cell.drag-over { background: #dbeafe !important; outline: 2px dashed var(--accent); }
-.tt-cell.conflict { background: #fff1f2 !important; }
-.tt-cell .cell-lesson {
-  height: 100%;
-  border-radius: 6px;
-  padding: 4px 6px;
-  color: white;
-  font-size: 11px;
-  font-weight: 600;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  cursor: default;
-  position: relative;
-  overflow: hidden;
-}
-.tt-cell .cell-lesson::before {
-  content: '';
-  position: absolute;
-  top: 0; right: 0;
-  width: 4px;
-  height: 100%;
-  background: rgba(255,255,255,0.3);
-  border-radius: 0 6px 6px 0;
-}
-.tt-cell .cell-lesson .cl-subject { font-size: 12px; font-weight: 700; }
-.tt-cell .cell-lesson .cl-meta { font-size: 10px; opacity: 0.85; }
-.cell-remove-btn {
-  position: absolute;
-  top: 2px;
-  left: 2px;
-  width: 16px; height: 16px;
-  border-radius: 50%;
-  background: rgba(0,0,0,0.3);
-  color: white;
-  border: none;
-  cursor: pointer;
-  font-size: 10px;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  transition: background 0.1s;
-}
-.tt-cell:hover .cell-remove-btn { display: flex; }
-.cell-remove-btn:hover { background: rgba(239,68,68,0.7); }
-
-/* Empty cell drop zone */
-.cell-empty { 
-  height: 100%; 
-  border-radius: 6px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #cbd5e1;
-  font-size: 18px;
-  transition: all 0.1s;
-}
-.tt-cell:hover .cell-empty { color: #94a3b8; background: #f8fafc; }
-
-/* ─── OVERVIEW TABLE ─── */
-.overview-wrapper {
-  flex: 1;
-  overflow: auto;
-  padding: 16px;
-}
-.overview-table {
-  border-collapse: collapse;
-  background: white;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-  width: max-content;
-  min-width: 100%;
-}
-.overview-table th, .overview-table td {
-  border: 1px solid #e8edf3;
-  padding: 4px;
-  font-size: 11px;
-  text-align: center;
-  white-space: nowrap;
-  height: 38px;
-  min-width: 60px;
-}
-.overview-table th { background: #1e293b; color: white; font-weight: 600; }
-.overview-table th.sticky-col { background: #0d1b2a; position: sticky; right: 0; z-index: 5; min-width: 130px; text-align: right; padding: 4px 10px; }
-.overview-table td.sticky-col { position: sticky; right: 0; background: #f8fafc; z-index: 5; font-weight: 600; text-align: right; padding: 4px 10px; border-left: 2px solid #cbd5e1; }
-.overview-table .day-sep { border-left: 2px solid #94a3b8 !important; }
-.overview-table .off-cell { background: #fef2f2; }
-.ov-cell-lesson {
-  display: inline-block;
-  padding: 2px 6px;
-  border-radius: 4px;
-  color: white;
-  font-size: 10px;
-  font-weight: 700;
-}
-
-/* ─── GENERATOR ─── */
-.gen-body { flex: 1; overflow-y: auto; padding: 20px; }
-.gen-card {
-  max-width: 600px;
-  margin: 0 auto;
-  background: white;
-  border-radius: 16px;
-  padding: 32px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-  text-align: center;
-}
-.gen-card .gen-icon { font-size: 52px; color: var(--accent); margin-bottom: 16px; }
-.gen-card h2 { font-size: 22px; font-weight: 800; margin-bottom: 8px; }
-.gen-card p { color: var(--muted); font-size: 13px; margin-bottom: 24px; line-height: 1.7; }
-.progress-bar-wrapper { background: #f1f5f9; border-radius: 999px; height: 8px; overflow: hidden; margin-bottom: 16px; display: none; }
-.progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--accent), #38bdf8); border-radius: 999px; width: 0; transition: width 0.2s; }
-.gen-logs {
-  background: #0d1b2a;
-  color: #38bdf8;
-  border-radius: 8px;
-  padding: 14px;
-  font-size: 12px;
-  text-align: right;
-  max-height: 150px;
-  overflow-y: auto;
-  display: none;
-  margin-top: 16px;
-  line-height: 1.8;
-}
-.gen-logs .log-success { color: #34d399; }
-.gen-logs .log-error { color: #f87171; }
-
-/* ─── REPORTS ─── */
-.reports-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
-.report-card {
-  background: white;
-  border-radius: 12px;
-  padding: 16px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
-}
-.report-card h4 { font-size: 13px; font-weight: 700; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; }
-.load-bar-wrap { margin-bottom: 6px; }
-.load-bar-wrap .lb-label { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); margin-bottom: 3px; }
-.load-bar { height: 8px; background: #f1f5f9; border-radius: 99px; overflow: hidden; }
-.load-bar-fill { height: 100%; border-radius: 99px; transition: width 0.4s; }
-
-/* ─── COLOR PICKER ─── */
-.color-swatches { display: flex; gap: 6px; flex-wrap: wrap; }
-.color-swatch {
-  width: 24px; height: 24px;
-  border-radius: 50%;
-  cursor: pointer;
-  border: 2px solid transparent;
-  transition: transform 0.1s, border-color 0.1s;
-}
-.color-swatch:hover { transform: scale(1.2); }
-.color-swatch.selected { border-color: #1e293b; transform: scale(1.2); }
-
-/* ─── SETTINGS ─── */
-.settings-section { margin-bottom: 24px; }
-.settings-section h3 { font-size: 14px; font-weight: 700; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
-
-/* ─── SCROLLBAR ─── */
-::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-
-/* ─── PRINT ─── */
-@media print {
-  .sidebar, .app-header, .tt-toolbar, .tt-panel, .modal-overlay { display: none !important; }
-  body { overflow: visible; }
-  .app-body, .main-content, .tab-pane { overflow: visible; height: auto; }
-  .tt-container { overflow: visible; }
-  .tt-main { overflow: visible; }
-  .tt-grid-wrapper { overflow: visible; padding: 0; }
-  .overview-wrapper { overflow: visible; }
-  .cell-remove-btn { display: none !important; }
-}
-
-/* ─── EMPTY STATE ─── */
-.empty-state {
-  text-align: center;
-  padding: 48px 20px;
-  color: var(--muted);
-}
-.empty-state i { font-size: 40px; margin-bottom: 12px; color: #cbd5e1; }
-.empty-state p { font-size: 13px; }
 </style>
 </head>
 <body>
 
-<!-- ══════════ HEADER ══════════ -->
-<header class="app-header">
-  <div class="logo">
+<!-- HEADER -->
+<header class="hdr">
+  <div class="hdr-logo">
     <i class="fas fa-th-large"></i>
-    <div>
-      <h1>TimeTable Pro</h1>
-      <span>نظام الجداول المدرسي المتقدم</span>
-    </div>
+    <div><h1>TimeTable Pro <span style="font-size:10px;background:var(--acc);padding:1px 6px;border-radius:4px;margin-right:4px">V3</span></h1><span>محرك الجدولة الذكي · التباديل والقيود</span></div>
   </div>
-  <div class="header-actions">
+  <div style="display:flex;gap:7px">
     <button class="hbtn" onclick="window.print()"><i class="fas fa-print"></i> طباعة</button>
-    <button class="hbtn primary" onclick="saveData()"><i class="fas fa-save"></i> حفظ البيانات</button>
+    <button class="hbtn acc" onclick="saveData()"><i class="fas fa-save"></i> حفظ</button>
   </div>
 </header>
 
-<!-- ══════════ BODY ══════════ -->
-<div class="app-body">
+<div class="body-wrap">
 
-  <!-- ── SIDEBAR ── -->
-  <aside class="sidebar">
-    <nav class="sidebar-nav">
-      <div class="nav-group-label">القائمة الرئيسية</div>
-      <div class="nav-item active" onclick="switchTab('dashboard')"><i class="fas fa-home"></i> الرئيسة</div>
-      <div class="nav-group-label">البيانات الأساسية</div>
-      <div class="nav-item" onclick="switchTab('classes')"><i class="fas fa-door-open"></i> الفصول <span class="badge" id="nb-classes">0</span></div>
-      <div class="nav-item" onclick="switchTab('teachers')"><i class="fas fa-user-tie"></i> المعلمون <span class="badge" id="nb-teachers">0</span></div>
-      <div class="nav-item" onclick="switchTab('assignments')"><i class="fas fa-link"></i> الإسناد <span class="badge" id="nb-assignments">0</span></div>
-      <div class="nav-group-label">الجدول</div>
-      <div class="nav-item" onclick="switchTab('generator')"><i class="fas fa-bolt"></i> التوليد التلقائي</div>
-      <div class="nav-item" onclick="switchTab('timetable')"><i class="fas fa-calendar-alt"></i> الجدول التفاعلي</div>
-      <div class="nav-item" onclick="switchTab('overview')"><i class="fas fa-table"></i> الجدول العام</div>
-      <div class="nav-item" onclick="switchTab('reports')"><i class="fas fa-chart-bar"></i> التقارير</div>
-      <div class="nav-group-label">أخرى</div>
-      <div class="nav-item" onclick="switchTab('settings')"><i class="fas fa-cog"></i> الإعدادات</div>
-    </nav>
-    <div class="sidebar-footer">
-      <div class="school-name-display" onclick="switchTab('settings')">
-        المدرسة
-        <span id="school-name-display">غير محدد</span>
-      </div>
+<!-- SIDEBAR -->
+<aside class="sb">
+  <nav class="sb-nav">
+    <div class="nl">الرئيسية</div>
+    <div class="ni on" onclick="go('dash')"><i class="fas fa-home"></i>الرئيسة</div>
+    <div class="nl">البيانات</div>
+    <div class="ni" onclick="go('classes')"><i class="fas fa-door-open"></i>الفصول<span class="badge" id="nb-c">0</span></div>
+    <div class="ni" onclick="go('teachers')"><i class="fas fa-user-tie"></i>المعلمون<span class="badge" id="nb-t">0</span></div>
+    <div class="ni" onclick="go('assignments')"><i class="fas fa-link"></i>الإسناد<span class="badge" id="nb-a">0</span></div>
+    <div class="nl">القيود</div>
+    <div class="ni" onclick="go('constraints')"><i class="fas fa-ban"></i>قيود المعلمين<span class="badge" id="nb-cst">!</span></div>
+    <div class="nl">الجدول</div>
+    <div class="ni" onclick="go('generator')"><i class="fas fa-bolt"></i>التوليد والتحسين</div>
+    <div class="ni" onclick="go('timetable')"><i class="fas fa-calendar-alt"></i>الجدول التفاعلي</div>
+    <div class="ni" onclick="go('overview')"><i class="fas fa-table"></i>الجدول العام</div>
+    <div class="ni" onclick="go('reports')"><i class="fas fa-chart-bar"></i>التقارير</div>
+    <div class="nl">أخرى</div>
+    <div class="ni" onclick="go('settings')"><i class="fas fa-cog"></i>الإعدادات</div>
+  </nav>
+  <div class="sb-ft" onclick="go('settings')">المدرسة<span id="school-lbl">غير محدد</span></div>
+</aside>
+
+<main class="main">
+
+<!-- DASHBOARD -->
+<div id="tp-dash" class="tp on">
+  <div class="sb2">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:16px">
+      <div style="background:#fff;border-radius:12px;padding:14px;box-shadow:0 1px 4px rgba(0,0,0,.06);display:flex;align-items:center;gap:12px"><div style="width:40px;height:40px;border-radius:10px;background:#dbeafe;color:#1d4ed8;display:flex;align-items:center;justify-content:center;font-size:16px"><i class="fas fa-door-open"></i></div><div><div style="font-size:10px;color:var(--muted)">الفصول</div><div style="font-size:24px;font-weight:700" id="sc">0</div></div></div>
+      <div style="background:#fff;border-radius:12px;padding:14px;box-shadow:0 1px 4px rgba(0,0,0,.06);display:flex;align-items:center;gap:12px"><div style="width:40px;height:40px;border-radius:10px;background:#d1fae5;color:#065f46;display:flex;align-items:center;justify-content:center;font-size:16px"><i class="fas fa-user-tie"></i></div><div><div style="font-size:10px;color:var(--muted)">المعلمون</div><div style="font-size:24px;font-weight:700" id="st">0</div></div></div>
+      <div style="background:#fff;border-radius:12px;padding:14px;box-shadow:0 1px 4px rgba(0,0,0,.06);display:flex;align-items:center;gap:12px"><div style="width:40px;height:40px;border-radius:10px;background:#fef3c7;color:#92400e;display:flex;align-items:center;justify-content:center;font-size:16px"><i class="fas fa-tasks"></i></div><div><div style="font-size:10px;color:var(--muted)">الإسناد</div><div style="font-size:24px;font-weight:700" id="sa">0</div></div></div>
+      <div style="background:#fff;border-radius:12px;padding:14px;box-shadow:0 1px 4px rgba(0,0,0,.06);display:flex;align-items:center;gap:12px"><div style="width:40px;height:40px;border-radius:10px;background:#d1fae5;color:#065f46;display:flex;align-items:center;justify-content:center;font-size:16px"><i class="fas fa-check-circle"></i></div><div><div style="font-size:10px;color:var(--muted)">موزعة</div><div style="font-size:24px;font-weight:700" id="ss">0</div></div></div>
+      <div style="background:#fff;border-radius:12px;padding:14px;box-shadow:0 1px 4px rgba(0,0,0,.06);display:flex;align-items:center;gap:12px"><div style="width:40px;height:40px;border-radius:10px;background:#fee2e2;color:#991b1b;display:flex;align-items:center;justify-content:center;font-size:16px"><i class="fas fa-exclamation-circle"></i></div><div><div style="font-size:10px;color:var(--muted)">غير موزعة</div><div style="font-size:24px;font-weight:700;color:#ef4444" id="su">0</div></div></div>
     </div>
-  </aside>
-
-  <!-- ══════════ MAIN ══════════ -->
-  <main class="main-content">
-
-    <!-- ── DASHBOARD ── -->
-    <div id="tab-dashboard" class="tab-pane active">
-      <div class="dashboard-body">
-        <div class="stats-grid">
-          <div class="stat-card">
-            <div class="stat-icon" style="background:#dbeafe;color:#1d4ed8"><i class="fas fa-door-open"></i></div>
-            <div><h3>الفصول</h3><p id="s-classes">0</p></div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-icon" style="background:#d1fae5;color:#065f46"><i class="fas fa-user-tie"></i></div>
-            <div><h3>المعلمون</h3><p id="s-teachers">0</p></div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-icon" style="background:#fef3c7;color:#92400e"><i class="fas fa-tasks"></i></div>
-            <div><h3>إجمالي الإسناد</h3><p id="s-total">0</p></div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-icon" style="background:#d1fae5;color:#065f46"><i class="fas fa-check-circle"></i></div>
-            <div><h3>حصص موزعة</h3><p id="s-scheduled">0</p></div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-icon" style="background:#fee2e2;color:#991b1b"><i class="fas fa-exclamation-circle"></i></div>
-            <div><h3>غير موزعة</h3><p id="s-unscheduled" style="color:#ef4444">0</p></div>
-          </div>
-        </div>
-        <div class="info-card">
-          <h4><i class="fas fa-info-circle" style="color:var(--accent)"></i> كيفية الاستخدام</h4>
-          <ol>
-            <li><strong>الإعدادات:</strong> ابدأ بضبط اسم المدرسة وعدد الحصص اليومية والأيام الدراسية.</li>
-            <li><strong>الفصول:</strong> أضف الفصول الدراسية (1/أ، 1/ب، ...).</li>
-            <li><strong>المعلمون:</strong> أضف المعلمين مع تحديد مواد التخصص والنصاب وأيام العمل.</li>
-            <li><strong>الإسناد:</strong> اربط كل معلم بالفصل والمادة وعدد الحصص الأسبوعية.</li>
-            <li><strong>التوليد:</strong> اضغط "بدء التوزيع" لتوليد الجدول تلقائياً.</li>
-            <li><strong>الجدول التفاعلي:</strong> عدّل الجدول يدوياً بالسحب والإفلات.</li>
-          </ol>
-        </div>
-      </div>
-    </div>
-
-    <!-- ── CLASSES ── -->
-    <div id="tab-classes" class="tab-pane">
-      <div class="section-header">
-        <h2><i class="fas fa-door-open" style="color:var(--accent);margin-left:8px"></i> إدارة الفصول</h2>
-        <button class="btn btn-primary" onclick="openClassModal()"><i class="fas fa-plus"></i> إضافة فصل</button>
-      </div>
-      <div class="section-body">
-        <div class="data-table">
-          <table>
-            <thead>
-              <tr><th>اسم الفصل</th><th>المرحلة</th><th>الإجراءات</th></tr>
-            </thead>
-            <tbody id="classes-tbody"></tbody>
-          </table>
-        </div>
-        <div id="classes-empty" class="empty-state" style="display:none">
-          <i class="fas fa-door-open"></i>
-          <p>لا توجد فصول. اضغط "إضافة فصل" للبدء.</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- ── TEACHERS ── -->
-    <div id="tab-teachers" class="tab-pane">
-      <div class="section-header">
-        <h2><i class="fas fa-user-tie" style="color:var(--accent);margin-left:8px"></i> إدارة المعلمين</h2>
-        <button class="btn btn-primary" onclick="openTeacherModal()"><i class="fas fa-plus"></i> إضافة معلم</button>
-      </div>
-      <div class="section-body">
-        <div class="data-table">
-          <table>
-            <thead>
-              <tr><th>الاسم</th><th>التخصص</th><th>اللون</th><th>النصاب</th><th>أيام العمل</th><th>الإجراءات</th></tr>
-            </thead>
-            <tbody id="teachers-tbody"></tbody>
-          </table>
-        </div>
-        <div id="teachers-empty" class="empty-state" style="display:none">
-          <i class="fas fa-user-tie"></i>
-          <p>لا يوجد معلمون. اضغط "إضافة معلم" للبدء.</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- ── ASSIGNMENTS ── -->
-    <div id="tab-assignments" class="tab-pane">
-      <div class="section-header">
-        <h2><i class="fas fa-link" style="color:var(--accent);margin-left:8px"></i> الإسناد (ربط المعلمين بالفصول)</h2>
-        <div style="display:flex;gap:8px">
-          <button class="btn btn-warn" onclick="autoAssign()"><i class="fas fa-magic"></i> إسناد تلقائي</button>
-          <button class="btn btn-primary" onclick="openAssignModal()"><i class="fas fa-plus"></i> إضافة إسناد</button>
-        </div>
-      </div>
-      <div class="section-body">
-        <div class="data-table">
-          <table>
-            <thead>
-              <tr><th>المعلم</th><th>المادة</th><th>الفصل</th><th>عدد الحصص</th><th>الإجراءات</th></tr>
-            </thead>
-            <tbody id="assignments-tbody"></tbody>
-          </table>
-        </div>
-        <div id="assignments-empty" class="empty-state" style="display:none">
-          <i class="fas fa-link"></i>
-          <p>لا يوجد إسناد. أضف المعلمين والفصول أولاً ثم اربطهم.</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- ── GENERATOR ── -->
-    <div id="tab-generator" class="tab-pane">
-      <div class="gen-body">
-        <div class="gen-card">
-          <div class="gen-icon"><i class="fas fa-bolt"></i></div>
-          <h2>محرك التوزيع الذكي</h2>
-          <p>
-            سيقوم النظام بتوزيع جميع حصص الإسناد على أيام وحصص الأسبوع مع مراعاة:<br>
-            أيام دوام المعلمين · عدم التعارض · الحد الأقصى للنصاب · التوزيع المتوازن
-          </p>
-          <div class="progress-bar-wrapper" id="gen-progress-wrap">
-            <div class="progress-bar-fill" id="gen-progress-fill"></div>
-          </div>
-          <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
-            <button class="btn btn-danger btn-secondary" onclick="clearSchedule()" style="background:#fee2e2;color:#991b1b"><i class="fas fa-trash"></i> مسح الجدول</button>
-            <button class="btn btn-primary" id="gen-btn" onclick="runGenerator()" style="padding:10px 32px;font-size:14px"><i class="fas fa-play"></i> بدء التوزيع</button>
-          </div>
-          <div class="gen-logs" id="gen-logs"></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ── TIMETABLE ── -->
-    <div id="tab-timetable" class="tab-pane">
-      <div class="tt-container">
-        <!-- Unscheduled Pool -->
-        <div class="tt-panel">
-          <div class="tt-panel-header">
-            حصص غير موزعة
-            <span class="count" id="pool-count">0</span>
-          </div>
-          <div class="unscheduled-pool" id="unscheduled-pool"></div>
-        </div>
-        <!-- Main Grid -->
-        <div class="tt-main">
-          <div class="tt-toolbar">
-            <div class="view-tabs">
-              <button class="view-tab active" onclick="setTTView('class')">عرض الفصل</button>
-              <button class="view-tab" onclick="setTTView('teacher')">عرض المعلم</button>
-            </div>
-            <div class="nav-arrows">
-              <button onclick="ttNavPrev()"><i class="fas fa-chevron-right"></i></button>
-              <button onclick="ttNavNext()"><i class="fas fa-chevron-left"></i></button>
-            </div>
-            <select id="tt-entity-select" onchange="ttSelectEntity(this.value)" style="flex:1;max-width:220px"></select>
-            <span id="tt-conflict-badge" style="display:none;background:#fee2e2;color:#991b1b;padding:4px 10px;border-radius:6px;font-size:11px;font-weight:700">
-              <i class="fas fa-exclamation-triangle"></i> يوجد تعارض!
-            </span>
-          </div>
-          <div class="tt-grid-wrapper">
-            <div class="tt-grid" id="tt-grid-container"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ── OVERVIEW ── -->
-    <div id="tab-overview" class="tab-pane">
-      <div class="section-header">
-        <h2><i class="fas fa-table" style="color:var(--accent);margin-left:8px"></i> الجدول العام</h2>
-        <div class="view-tabs">
-          <button class="view-tab active" id="ov-teacher-btn" onclick="setOvView('teacher')">حسب المعلم</button>
-          <button class="view-tab" id="ov-class-btn" onclick="setOvView('class')">حسب الفصل</button>
-        </div>
-      </div>
-      <div class="overview-wrapper">
-        <table class="overview-table" id="overview-table"></table>
-      </div>
-    </div>
-
-    <!-- ── REPORTS ── -->
-    <div id="tab-reports" class="tab-pane">
-      <div class="section-header">
-        <h2><i class="fas fa-chart-bar" style="color:var(--accent);margin-left:8px"></i> تقارير النصاب</h2>
-      </div>
-      <div class="section-body">
-        <div class="reports-grid" id="reports-grid"></div>
-      </div>
-    </div>
-
-    <!-- ── SETTINGS ── -->
-    <div id="tab-settings" class="tab-pane">
-      <div class="section-header">
-        <h2><i class="fas fa-cog" style="color:var(--accent);margin-left:8px"></i> إعدادات النظام</h2>
-        <button class="btn btn-primary" onclick="saveSettings()"><i class="fas fa-save"></i> حفظ الإعدادات</button>
-      </div>
-      <div class="section-body">
-        <div class="settings-section">
-          <h3>معلومات المدرسة</h3>
-          <div class="form-grid-2">
-            <div class="form-group"><label>اسم المدرسة</label><input type="text" id="s-school-name" placeholder="مثال: مدرسة النجاح الابتدائية"></div>
-            <div class="form-group"><label>المرحلة الدراسية</label><select id="s-stage"><option>ابتدائية</option><option>متوسطة</option><option>ثانوية</option></select></div>
-          </div>
-        </div>
-        <div class="settings-section">
-          <h3>إعدادات الجدول</h3>
-          <div class="form-grid-2">
-            <div class="form-group"><label>عدد الحصص في اليوم</label><input type="number" id="s-periods" min="4" max="10" value="7"></div>
-          </div>
-          <div class="form-group">
-            <label>أيام الدراسة (انقر لتفعيل/إلغاء)</label>
-            <div class="days-selector" id="settings-days">
-              <span class="day-btn active" data-day="0">الأحد</span>
-              <span class="day-btn active" data-day="1">الاثنين</span>
-              <span class="day-btn active" data-day="2">الثلاثاء</span>
-              <span class="day-btn active" data-day="3">الأربعاء</span>
-              <span class="day-btn active" data-day="4">الخميس</span>
-              <span class="day-btn" data-day="5">الجمعة</span>
-              <span class="day-btn" data-day="6">السبت</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-  </main>
-</div>
-
-<!-- ══════════ MODALS ══════════ -->
-
-<!-- Class Modal -->
-<div class="modal-overlay" id="class-modal">
-  <div class="modal-box">
-    <div class="modal-header"><h3 id="class-modal-title">إضافة فصل</h3><button onclick="closeModal('class-modal')"><i class="fas fa-times"></i></button></div>
-    <div class="modal-body">
-      <input type="hidden" id="cm-id">
-      <div class="form-grid-2">
-        <div class="form-group"><label>اسم الفصل</label><input type="text" id="cm-name" placeholder="مثال: 1/أ"></div>
-        <div class="form-group"><label>المرحلة</label>
-          <select id="cm-grade">
-            <option>الصف الأول</option><option>الصف الثاني</option><option>الصف الثالث</option>
-            <option>الصف الرابع</option><option>الصف الخامس</option><option>الصف السادس</option>
-          </select>
-        </div>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-secondary" onclick="closeModal('class-modal')">إلغاء</button>
-      <button class="btn btn-primary" onclick="saveClass()">حفظ</button>
+    <div id="dash-score" style="display:none" class="score-widget"><div><div class="sw-val" id="dsv">0</div><div class="sw-lbl">جودة الجدول</div><div class="sw-sub">من أصل 100 نقطة</div></div><div style="flex:1"><div id="dsb" style="height:8px;background:rgba(255,255,255,.3);border-radius:99px;overflow:hidden;margin-bottom:6px"><div id="dsbf" style="height:100%;background:#fff;border-radius:99px;transition:width .5s"></div></div><div id="dsd" style="font-size:11px;opacity:.8"></div></div></div>
+    <div style="background:#fff;border-radius:12px;padding:16px;box-shadow:0 1px 4px rgba(0,0,0,.06)">
+      <h4 style="font-weight:700;margin-bottom:10px;display:flex;align-items:center;gap:8px"><i class="fas fa-info-circle" style="color:var(--acc)"></i>كيفية الاستخدام</h4>
+      <ol style="padding-right:18px">
+        <li style="font-size:12px;color:var(--muted);margin-bottom:5px;line-height:1.6"><strong>الإعدادات:</strong> ضبط أيام الدراسة وعدد الحصص.</li>
+        <li style="font-size:12px;color:var(--muted);margin-bottom:5px;line-height:1.6"><strong>الفصول والمعلمون:</strong> أضف البيانات الأساسية.</li>
+        <li style="font-size:12px;color:var(--muted);margin-bottom:5px;line-height:1.6"><strong>الإسناد:</strong> حدد من يدرّس ماذا ولمن وكم حصة.</li>
+        <li style="font-size:12px;color:var(--muted);margin-bottom:5px;line-height:1.6"><strong>قيود المعلمين:</strong> احجب حصصاً أو أياماً بعينها لكل معلم، أو ضع حصصاً مفضلة.</li>
+        <li style="font-size:12px;color:var(--muted);margin-bottom:5px;line-height:1.6"><strong>التوليد:</strong> اختر الخوارزمية (Backtracking أو Greedy)، ضبط معاملات التحسين، ثم ابدأ.</li>
+        <li style="font-size:12px;color:var(--muted);margin-bottom:5px;line-height:1.6"><strong>الجدول التفاعلي:</strong> اسحب الحصص وانقلها يدوياً.</li>
+      </ol>
     </div>
   </div>
 </div>
 
-<!-- Teacher Modal -->
-<div class="modal-overlay" id="teacher-modal">
-  <div class="modal-box" style="max-width:540px">
-    <div class="modal-header"><h3 id="teacher-modal-title">إضافة معلم</h3><button onclick="closeModal('teacher-modal')"><i class="fas fa-times"></i></button></div>
-    <div class="modal-body">
-      <input type="hidden" id="tm-id">
-      <div class="form-group"><label>الاسم الثلاثي</label><input type="text" id="tm-name" placeholder="مثال: محمد عبدالله الغامدي"></div>
-      <div class="form-grid-2">
-        <div class="form-group"><label>التخصص / المادة</label>
-          <select id="tm-subject">
-            <option>الرياضيات</option><option>العلوم</option><option>اللغة العربية</option>
-            <option>اللغة الإنجليزية</option><option>التربية الإسلامية</option><option>الاجتماعيات</option>
-            <option>التربية الفنية</option><option>التربية البدنية</option><option>الحاسب الآلي</option>
-            <option>أخرى</option>
-          </select>
-        </div>
-        <div class="form-group"><label>النصاب الأسبوعي (حصة)</label><input type="number" id="tm-max" value="20" min="1" max="40"></div>
-      </div>
-      <div class="form-group">
-        <label>لون المعلم</label>
-        <div class="color-swatches" id="tm-colors"></div>
-      </div>
-      <div class="form-group">
-        <label>أيام الدوام (انقر للتبديل)</label>
-        <div class="days-selector" id="tm-days"></div>
-        <p style="font-size:11px;color:var(--muted);margin-top:5px">* الأيام المحددة = أيام الدوام. أيام الراحة لن يُجدول فيها.</p>
-      </div>
+<!-- CLASSES -->
+<div id="tp-classes" class="tp">
+  <div class="sh"><h2><i class="fas fa-door-open" style="color:var(--acc);margin-left:7px"></i>إدارة الفصول</h2><button class="btn bp" onclick="openCM()"><i class="fas fa-plus"></i>إضافة فصل</button></div>
+  <div class="sb2"><div class="dtbl"><table><thead><tr><th>اسم الفصل</th><th>المرحلة</th><th>الإجراءات</th></tr></thead><tbody id="cls-tb"></tbody></table></div><div id="cls-em" class="es" style="display:none"><i class="fas fa-door-open"></i><p>لا توجد فصول.</p></div></div>
+</div>
+
+<!-- TEACHERS -->
+<div id="tp-teachers" class="tp">
+  <div class="sh"><h2><i class="fas fa-user-tie" style="color:var(--acc);margin-left:7px"></i>إدارة المعلمين</h2><button class="btn bp" onclick="openTM()"><i class="fas fa-plus"></i>إضافة معلم</button></div>
+  <div class="sb2"><div class="dtbl"><table><thead><tr><th>الاسم</th><th>التخصص</th><th>اللون</th><th>النصاب</th><th>أيام العمل</th><th>الإجراءات</th></tr></thead><tbody id="tch-tb"></tbody></table></div><div id="tch-em" class="es" style="display:none"><i class="fas fa-user-tie"></i><p>لا يوجد معلمون.</p></div></div>
+</div>
+
+<!-- ASSIGNMENTS -->
+<div id="tp-assignments" class="tp">
+  <div class="sh"><h2><i class="fas fa-link" style="color:var(--acc);margin-left:7px"></i>الإسناد</h2><div style="display:flex;gap:7px"><button class="btn bw" onclick="autoAssign()"><i class="fas fa-magic"></i>تلقائي</button><button class="btn bp" onclick="openAM()"><i class="fas fa-plus"></i>إضافة</button></div></div>
+  <div class="sb2"><div class="dtbl"><table><thead><tr><th>المعلم</th><th>المادة</th><th>الفصل</th><th>الحصص</th><th>الإجراءات</th></tr></thead><tbody id="asg-tb"></tbody></table></div><div id="asg-em" class="es" style="display:none"><i class="fas fa-link"></i><p>لا يوجد إسناد.</p></div></div>
+</div>
+
+<!-- CONSTRAINTS -->
+<div id="tp-constraints" class="tp">
+  <div class="sh">
+    <h2><i class="fas fa-ban" style="color:var(--danger);margin-left:7px"></i>قيود المعلمين</h2>
+    <div style="display:flex;gap:7px">
+      <select id="cst-teacher-sel" onchange="renderConstraints()" style="border:1px solid var(--border);border-radius:8px;padding:5px 9px;font-size:12px;font-family:'Cairo',sans-serif;outline:none"><option value="">-- اختر معلماً --</option></select>
     </div>
-    <div class="modal-footer">
-      <button class="btn btn-secondary" onclick="closeModal('teacher-modal')">إلغاء</button>
-      <button class="btn btn-primary" onclick="saveTeacher()">حفظ المعلم</button>
+  </div>
+  <div class="sb2" id="cst-body">
+    <div class="es"><i class="fas fa-ban"></i><p>اختر معلماً لتحرير قيوده.</p></div>
+  </div>
+</div>
+
+<!-- GENERATOR -->
+<div id="tp-generator" class="tp">
+  <div class="gen-body">
+    <div class="gen-card">
+      <div class="gen-title">
+        <i class="fas fa-microchip"></i>
+        <h2>محرك الجدولة الذكي</h2>
+        <p>يستخدم التباديل والتوافق للعثور على الجدول الأمثل مع مراعاة جميع القيود</p>
+      </div>
+
+      <!-- Algorithm Selection -->
+      <div class="opt-section">
+        <h4><i class="fas fa-code-branch" style="color:var(--acc)"></i>خوارزمية التوزيع</h4>
+        <div class="algo-opts">
+          <div class="algo-opt on" id="algo-bt" onclick="selAlgo('bt')">
+            <h5><i class="fas fa-sitemap" style="color:var(--acc)"></i>Backtracking + MRV</h5>
+            <p>يستكشف كل التوافيق الممكنة مع تقليص الفضاء. أقوى وأدق، مثالي للجداول المعقدة.</p>
+          </div>
+          <div class="algo-opt" id="algo-gr" onclick="selAlgo('gr')">
+            <h5><i class="fas fa-random" style="color:var(--warn)"></i>Greedy الجشعة</h5>
+            <p>يوزع بسرعة عالية بالترتيب الأمثل. مناسب للجداول الكبيرة حيث السرعة مهمة.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Optimization Options -->
+      <div class="opt-section">
+        <h4><i class="fas fa-sliders-h" style="color:var(--success)"></i>معاملات التحسين (Optimization Weights)</h4>
+        <div class="opt-row"><label>تفادي الحصص المتتالية للمعلم</label><div style="display:flex;align-items:center;gap:6px"><input type="range" id="w-gap" min="0" max="10" value="7" oninput="document.getElementById('wv-gap').textContent=this.value"><span class="oval" id="wv-gap">7</span></div></div>
+        <div class="opt-row"><label>توزيع متوازن يومياً</label><div style="display:flex;align-items:center;gap:6px"><input type="range" id="w-bal" min="0" max="10" value="8" oninput="document.getElementById('wv-bal').textContent=this.value"><span class="oval" id="wv-bal">8</span></div></div>
+        <div class="opt-row"><label>احترام الحصص المفضلة</label><div style="display:flex;align-items:center;gap:6px"><input type="range" id="w-pref" min="0" max="10" value="5" oninput="document.getElementById('wv-pref').textContent=this.value"><span class="oval" id="wv-pref">5</span></div></div>
+        <div class="opt-row"><label>تجميع حصص المعلم (قلة الفراغات)</label><div style="display:flex;align-items:center;gap:6px"><input type="range" id="w-comp" min="0" max="10" value="6" oninput="document.getElementById('wv-comp').textContent=this.value"><span class="oval" id="wv-comp">6</span></div></div>
+        <div class="opt-row"><label>تفادي تكرار المادة بيوم واحد للفصل</label><div style="display:flex;align-items:center;gap:6px"><input type="range" id="w-rep" min="0" max="10" value="9" oninput="document.getElementById('wv-rep').textContent=this.value"><span class="oval" id="wv-rep">9</span></div></div>
+      </div>
+
+      <!-- Post-gen Optimization -->
+      <div class="opt-section">
+        <h4><i class="fas fa-magic" style="color:var(--warn)"></i>مرحلة التحسين بعد التوليد</h4>
+        <div class="opt-row">
+          <label>تفعيل Local Search (تبادل الحصص لتحسين الجودة)</label>
+          <label class="toggle-sw"><input type="checkbox" id="opt-ls" checked><div class="toggle-track"></div><div class="toggle-thumb"></div></label>
+        </div>
+        <div class="opt-row"><label>عدد محاولات التبادل</label><div style="display:flex;align-items:center;gap:6px"><input type="range" id="opt-itr" min="100" max="2000" step="100" value="500" oninput="document.getElementById('ovl-itr').textContent=this.value"><span class="oval" id="ovl-itr">500</span></div></div>
+        <div class="opt-row">
+          <label>Simulated Annealing (تحسين عميق، أبطأ)</label>
+          <label class="toggle-sw"><input type="checkbox" id="opt-sa"><div class="toggle-track"></div><div class="toggle-thumb"></div></label>
+        </div>
+      </div>
+
+      <div class="pb-wrap" id="pbw"><div class="pb-fill" id="pbf"></div></div>
+      <div style="display:flex;gap:9px;justify-content:center;flex-wrap:wrap">
+        <button class="btn bd" onclick="clearSched()"><i class="fas fa-trash"></i>مسح الجدول</button>
+        <button class="btn bp" id="gen-btn" onclick="runGen()" style="padding:9px 28px;font-size:13px"><i class="fas fa-play"></i>بدء التوزيع</button>
+      </div>
+      <div class="gen-logs" id="gen-logs"></div>
+      <div class="score-bar" id="score-bar"><span class="sl">جودة الجدول:</span><span class="sv" id="score-val">—</span><span class="sl">/ 100</span></div>
     </div>
   </div>
 </div>
 
-<!-- Assignment Modal -->
-<div class="modal-overlay" id="assign-modal">
-  <div class="modal-box">
-    <div class="modal-header"><h3>إضافة إسناد</h3><button onclick="closeModal('assign-modal')"><i class="fas fa-times"></i></button></div>
-    <div class="modal-body">
-      <div class="form-group"><label>المعلم</label>
-        <select id="am-teacher"></select>
+<!-- TIMETABLE -->
+<div id="tp-timetable" class="tp">
+  <div class="tt-wrap">
+    <div class="tt-main">
+      <div class="tbar">
+        <div class="vtabs"><button class="vt on" id="vtc" onclick="setView('class',this)">عرض الفصل</button><button class="vt" id="vtt" onclick="setView('teacher',this)">عرض المعلم</button></div>
+        <div class="narr"><button onclick="navPrev()"><i class="fas fa-chevron-right"></i></button><button onclick="navNext()"><i class="fas fa-chevron-left"></i></button></div>
+        <select id="ent-sel" onchange="selEnt(this.value)"></select>
+        <div id="cbadge"><i class="fas fa-exclamation-triangle"></i>تعارض!</div>
       </div>
-      <div class="form-grid-2">
-        <div class="form-group"><label>الفصل</label>
-          <select id="am-class"></select>
-        </div>
-        <div class="form-group"><label>عدد الحصص الأسبوعية</label>
-          <input type="number" id="am-count" value="5" min="1" max="15">
-        </div>
-      </div>
+      <div class="tgw"><table class="ttbl" id="tbl"></table></div>
     </div>
-    <div class="modal-footer">
-      <button class="btn btn-secondary" onclick="closeModal('assign-modal')">إلغاء</button>
-      <button class="btn btn-primary" onclick="saveAssignment()">إضافة</button>
+    <div class="tt-pool">
+      <div class="ph"><span class="pt"><i class="fas fa-layer-group" style="color:var(--acc);margin-left:5px"></i>غير موزعة</span><span class="pc" id="pool-badge">0</span></div>
+      <div class="pb2" id="pool-body" ondragover="event.preventDefault()" ondrop="poolDrop(event)"></div>
     </div>
   </div>
 </div>
+
+<!-- OVERVIEW -->
+<div id="tp-overview" class="tp">
+  <div class="sh"><h2><i class="fas fa-table" style="color:var(--acc);margin-left:7px"></i>الجدول العام</h2>
+    <div class="vtabs"><button class="vt on" id="ovt-btn" onclick="setOV('teacher')">حسب المعلم</button><button class="vt" id="ovc-btn" onclick="setOV('class')">حسب الفصل</button></div>
+  </div>
+  <div class="ovw"><table class="ovtbl" id="ovtbl"></table></div>
+</div>
+
+<!-- REPORTS -->
+<div id="tp-reports" class="tp">
+  <div class="sh"><h2><i class="fas fa-chart-bar" style="color:var(--acc);margin-left:7px"></i>التقارير والتحليل</h2></div>
+  <div class="sb2">
+    <div id="rp-score" style="display:none;margin-bottom:14px"></div>
+    <div class="rpg" id="rpg"></div>
+  </div>
+</div>
+
+<!-- SETTINGS -->
+<div id="tp-settings" class="tp">
+  <div class="sh"><h2><i class="fas fa-cog" style="color:var(--acc);margin-left:7px"></i>الإعدادات</h2><button class="btn bp" onclick="saveSettings()"><i class="fas fa-save"></i>حفظ</button></div>
+  <div class="sb2">
+    <div style="margin-bottom:20px"><h3 style="font-size:13px;font-weight:700;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--border)">معلومات المدرسة</h3>
+      <div class="fg2"><div class="fg"><label>اسم المدرسة</label><input type="text" id="s-name" placeholder="مدرسة النجاح الابتدائية"></div><div class="fg"><label>المرحلة</label><select id="s-stage"><option>ابتدائية</option><option>متوسطة</option><option>ثانوية</option></select></div></div>
+    </div>
+    <div><h3 style="font-size:13px;font-weight:700;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--border)">إعدادات الجدول</h3>
+      <div class="fg2"><div class="fg"><label>عدد الحصص في اليوم</label><input type="number" id="s-per" min="4" max="10" value="7"></div></div>
+      <div class="fg"><label>أيام الدراسة</label><div style="display:flex;gap:6px;flex-wrap:wrap" id="s-days"></div></div>
+    </div>
+  </div>
+</div>
+
+</main>
+</div>
+
+<div id="dg"></div>
+
+<!-- ═══ MODALS ═══ -->
+<div class="mov" id="cm"><div class="mbox"><div class="mhd"><h3 id="cm-ttl">إضافة فصل</h3><button onclick="closeM('cm')"><i class="fas fa-times"></i></button></div><div class="mbd"><input type="hidden" id="cm-id"><div class="fg2"><div class="fg"><label>اسم الفصل</label><input type="text" id="cm-n" placeholder="1/أ"></div><div class="fg"><label>المرحلة</label><select id="cm-g"><option>الصف الأول</option><option>الصف الثاني</option><option>الصف الثالث</option><option>الصف الرابع</option><option>الصف الخامس</option><option>الصف السادس</option></select></div></div></div><div class="mft"><button class="btn bs" onclick="closeM('cm')">إلغاء</button><button class="btn bp" onclick="saveClass()">حفظ</button></div></div></div>
+
+<div class="mov" id="tm"><div class="mbox" style="max-width:530px"><div class="mhd"><h3 id="tm-ttl">إضافة معلم</h3><button onclick="closeM('tm')"><i class="fas fa-times"></i></button></div><div class="mbd"><input type="hidden" id="tm-id"><div class="fg"><label>الاسم الثلاثي</label><input type="text" id="tm-n" placeholder="محمد عبدالله الغامدي"></div><div class="fg2"><div class="fg"><label>التخصص</label><select id="tm-s"><option>الرياضيات</option><option>العلوم</option><option>اللغة العربية</option><option>اللغة الإنجليزية</option><option>التربية الإسلامية</option><option>الاجتماعيات</option><option>التربية الفنية</option><option>التربية البدنية</option><option>الحاسب الآلي</option><option>أخرى</option></select></div><div class="fg"><label>النصاب الأسبوعي</label><input type="number" id="tm-m" value="20" min="1" max="40"></div></div><div class="fg"><label>لون المعلم</label><div class="csw" id="tm-clr"></div></div><div class="fg"><label>أيام الدوام</label><div style="display:flex;gap:6px;flex-wrap:wrap" id="tm-days"></div></div></div><div class="mft"><button class="btn bs" onclick="closeM('tm')">إلغاء</button><button class="btn bp" onclick="saveTeacher()">حفظ</button></div></div></div>
+
+<div class="mov" id="am"><div class="mbox"><div class="mhd"><h3>إضافة إسناد</h3><button onclick="closeM('am')"><i class="fas fa-times"></i></button></div><div class="mbd"><div class="fg"><label>المعلم</label><select id="am-t"></select></div><div class="fg2"><div class="fg"><label>الفصل</label><select id="am-c"></select></div><div class="fg"><label>عدد الحصص الأسبوعية</label><input type="number" id="am-n" value="5" min="1" max="20"></div></div></div><div class="mft"><button class="btn bs" onclick="closeM('am')">إلغاء</button><button class="btn bp" onclick="saveAssign()">إضافة</button></div></div></div>
 
 <script>
-// ════════════════════════════════════════
+// ══════════════════════════════════════════
 //  DATA MODEL
-// ════════════════════════════════════════
-const TEACHER_COLORS = [
-  '#ef4444','#f97316','#f59e0b','#84cc16','#10b981',
-  '#06b6d4','#3b82f6','#6366f1','#8b5cf6','#d946ef',
-  '#f43f5e','#0ea5e9','#14b8a6','#a16207','#1d4ed8'
-];
+// ══════════════════════════════════════════
+const COLORS=['#ef4444','#f97316','#f59e0b','#84cc16','#10b981','#06b6d4','#3b82f6','#6366f1','#8b5cf6','#d946ef','#f43f5e','#0ea5e9','#14b8a6','#b45309','#1d4ed8'];
+const DAYS=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
 
-const DAY_NAMES = ['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
-
-let appData = {
-  school: { name: '', stage: 'ابتدائية', periods: 7, schoolDays: [0,1,2,3,4] },
-  classes: [],
-  teachers: [],
-  assignments: [],
-  schedule: {} // schedule[day][period][classId] = {teacherId, subject, color, assignId}
+let D={
+  school:{name:'',stage:'ابتدائية',periods:7,schoolDays:[0,1,2,3,4]},
+  classes:[],teachers:[],assignments:[],
+  // constraints[teacherId] = {blocked:[[d,p],...], preferred:[[d,p],...], maxConsec:3, maxPerDay:6}
+  constraints:{},
+  schedule:{} // schedule[d][p][classId]={teacherId,subject,color,assignId}
 };
 
-// ── LOAD ──
-function loadData() {
-  try {
-    const saved = localStorage.getItem('tt-pro-v1');
-    if (saved) appData = JSON.parse(saved);
-  } catch(e) {}
-  initScheduleStructure();
+function saveData(){ localStorage.setItem('ttpv3',JSON.stringify(D)); toast('تم الحفظ','ok'); }
+function loadData(){ try{ const s=localStorage.getItem('ttpv3'); if(s) D=JSON.parse(s); }catch(e){} fixSched(); }
+function fixSched(){ D.school.schoolDays.forEach(d=>{ if(!D.schedule[d]) D.schedule[d]={}; for(let p=0;p<D.school.periods;p++) if(!D.schedule[d][p]) D.schedule[d][p]={}; }); }
+
+function toast(msg,type='info'){
+  const el=document.createElement('div');
+  const bg=type==='ok'?'#10b981':type==='err'?'#ef4444':type==='warn'?'#f59e0b':'#1a56db';
+  el.style.cssText=`position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:${bg};color:#fff;padding:9px 20px;border-radius:9px;font-size:12px;font-weight:600;z-index:9999;box-shadow:0 4px 16px rgba(0,0,0,.3);font-family:Cairo,sans-serif;transition:opacity .3s`;
+  el.textContent=msg; document.body.appendChild(el);
+  setTimeout(()=>{ el.style.opacity='0'; setTimeout(()=>el.remove(),300); },2300);
 }
 
-function saveData() {
-  localStorage.setItem('tt-pro-v1', JSON.stringify(appData));
-  showToast('تم الحفظ بنجاح', 'success');
-}
+const $q=(s,r=document)=>r.querySelector(s);
+const $a=(s,r=document)=>[...r.querySelectorAll(s)];
 
-function initScheduleStructure() {
-  const days = appData.school.schoolDays;
-  const periods = appData.school.periods;
-  days.forEach(d => {
-    if (!appData.schedule[d]) appData.schedule[d] = {};
-    for (let p = 0; p < periods; p++) {
-      if (!appData.schedule[d][p]) appData.schedule[d][p] = {};
-    }
-  });
-}
-
-// ── TOAST ──
-function showToast(msg, type='info') {
-  const t = document.createElement('div');
-  t.style.cssText = `position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
-    background:${type==='success'?'#10b981':type==='error'?'#ef4444':'#1a56db'};
-    color:white;padding:10px 20px;border-radius:8px;font-size:13px;font-weight:600;
-    z-index:9999;box-shadow:0 4px 12px rgba(0,0,0,0.3);font-family:Cairo,sans-serif;
-    animation:fadeInUp 0.3s ease`;
-  t.textContent = msg;
-  document.body.appendChild(t);
-  setTimeout(() => t.remove(), 2500);
-}
-
-// ════════════════════════════════════════
+// ══════════════════════════════════════════
 //  NAVIGATION
-// ════════════════════════════════════════
-function switchTab(id) {
-  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  document.getElementById('tab-' + id).classList.add('active');
-  document.querySelector(`.nav-item[onclick*="${id}"]`)?.classList.add('active');
-
-  // Render on tab switch
-  if (id === 'timetable') { renderUnscheduledPool(); renderTTGrid(); }
-  if (id === 'overview') renderOverview();
-  if (id === 'reports') renderReports();
-  if (id === 'classes') renderClasses();
-  if (id === 'teachers') renderTeachers();
-  if (id === 'assignments') renderAssignments();
+// ══════════════════════════════════════════
+function go(id){
+  $a('.tp').forEach(p=>p.classList.remove('on'));
+  $a('.ni').forEach(n=>n.classList.remove('on'));
+  document.getElementById('tp-'+id).classList.add('on');
+  const ni=$q(`.ni[onclick*="'${id}'"]`); if(ni) ni.classList.add('on');
+  if(id==='timetable'){ renderPool(); renderGrid(); }
+  if(id==='overview') renderOV();
+  if(id==='reports') renderRP();
+  if(id==='classes') renderCLS();
+  if(id==='teachers') renderTCH();
+  if(id==='assignments') renderASG();
+  if(id==='constraints') fillConstraintSel();
   updateStats();
 }
 
-// ════════════════════════════════════════
+// ══════════════════════════════════════════
 //  SETTINGS
-// ════════════════════════════════════════
-function initSettings() {
-  document.getElementById('s-school-name').value = appData.school.name;
-  document.getElementById('s-periods').value = appData.school.periods;
-  document.getElementById('s-stage').value = appData.school.stage;
-
-  const daysBtns = document.getElementById('settings-days');
-  daysBtns.querySelectorAll('.day-btn').forEach(btn => {
-    const d = parseInt(btn.dataset.day);
-    btn.classList.toggle('active', appData.school.schoolDays.includes(d));
-    btn.addEventListener('click', () => {
-      btn.classList.toggle('active');
-    });
-  });
+// ══════════════════════════════════════════
+function initSettings(){
+  $q('#s-name').value=D.school.name;
+  $q('#s-per').value=D.school.periods;
+  $q('#s-stage').value=D.school.stage;
+  const el=$q('#s-days'); el.innerHTML='';
+  DAYS.forEach((n,i)=>{ const b=document.createElement('span'); b.className='day-btn'+(D.school.schoolDays.includes(i)?' on':''); b.dataset.day=i; b.textContent=n; b.onclick=()=>b.classList.toggle('on'); el.appendChild(b); });
+}
+function saveSettings(){
+  D.school.name=$q('#s-name').value.trim();
+  D.school.stage=$q('#s-stage').value;
+  D.school.periods=+$q('#s-per').value;
+  D.school.schoolDays=$a('#s-days .day-btn.on').map(b=>+b.dataset.day);
+  fixSched(); $q('#school-lbl').textContent=D.school.name||'غير محدد';
+  toast('تم حفظ الإعدادات','ok'); updateStats();
 }
 
-function saveSettings() {
-  appData.school.name = document.getElementById('s-school-name').value.trim();
-  appData.school.stage = document.getElementById('s-stage').value;
-  appData.school.periods = parseInt(document.getElementById('s-periods').value);
-  appData.school.schoolDays = [...document.querySelectorAll('#settings-days .day-btn.active')].map(b => parseInt(b.dataset.day));
-  initScheduleStructure();
-  document.getElementById('school-name-display').textContent = appData.school.name || 'غير محدد';
-  showToast('تم حفظ الإعدادات', 'success');
-  updateStats();
-}
-
-// ════════════════════════════════════════
+// ══════════════════════════════════════════
 //  CLASSES
-// ════════════════════════════════════════
-function openClassModal(id = null) {
-  document.getElementById('cm-id').value = id || '';
-  if (id) {
-    const cls = appData.classes.find(c => c.id === id);
-    document.getElementById('class-modal-title').textContent = 'تعديل الفصل';
-    document.getElementById('cm-name').value = cls.name;
-    document.getElementById('cm-grade').value = cls.grade;
-  } else {
-    document.getElementById('class-modal-title').textContent = 'إضافة فصل';
-    document.getElementById('cm-name').value = '';
-  }
-  openModal('class-modal');
+// ══════════════════════════════════════════
+function openCM(id=null){
+  $q('#cm-id').value=id||'';
+  if(id){ const c=D.classes.find(x=>x.id===id); $q('#cm-ttl').textContent='تعديل فصل'; $q('#cm-n').value=c.name; $q('#cm-g').value=c.grade; }
+  else{ $q('#cm-ttl').textContent='إضافة فصل'; $q('#cm-n').value=''; }
+  openM('cm');
+}
+function saveClass(){
+  const id=$q('#cm-id').value, name=$q('#cm-n').value.trim(), grade=$q('#cm-g').value;
+  if(!name) return toast('أدخل اسم الفصل','err');
+  if(id) Object.assign(D.classes.find(x=>x.id===id),{name,grade});
+  else D.classes.push({id:'c'+Date.now(),name,grade});
+  closeM('cm'); renderCLS(); updateStats();
+}
+function delCLS(id){ if(!confirm('حذف الفصل؟')) return; D.classes=D.classes.filter(c=>c.id!==id); D.assignments=D.assignments.filter(a=>a.classId!==id); Object.values(D.schedule).forEach(dy=>Object.values(dy).forEach(p=>delete p[id])); renderCLS(); updateStats(); }
+function renderCLS(){
+  const tb=$q('#cls-tb'), em=$q('#cls-em'); tb.innerHTML='';
+  if(!D.classes.length){ em.style.display='block'; return; } em.style.display='none';
+  D.classes.forEach(c=>{ tb.innerHTML+=`<tr><td><strong>${c.name}</strong></td><td><span class="tag" style="background:#dbeafe;color:#1d4ed8">${c.grade}</span></td><td><button class="btn bs bsm" onclick="openCM('${c.id}')"><i class="fas fa-edit"></i></button> <button class="btn bd bsm" onclick="delCLS('${c.id}')"><i class="fas fa-trash"></i></button></td></tr>`; });
+  $q('#nb-c').textContent=D.classes.length;
 }
 
-function saveClass() {
-  const id = document.getElementById('cm-id').value;
-  const name = document.getElementById('cm-name').value.trim();
-  const grade = document.getElementById('cm-grade').value;
-  if (!name) return showToast('أدخل اسم الفصل', 'error');
-  if (id) {
-    const cls = appData.classes.find(c => c.id === id);
-    cls.name = name; cls.grade = grade;
-  } else {
-    appData.classes.push({ id: 'c' + Date.now(), name, grade });
-  }
-  closeModal('class-modal');
-  renderClasses();
-  updateStats();
-}
-
-function deleteClass(id) {
-  if (!confirm('حذف الفصل؟ سيتم حذف الإسناد المرتبط به.')) return;
-  appData.classes = appData.classes.filter(c => c.id !== id);
-  appData.assignments = appData.assignments.filter(a => a.classId !== id);
-  Object.values(appData.schedule).forEach(day => {
-    Object.values(day).forEach(period => { delete period[id]; });
-  });
-  renderClasses(); renderAssignments(); updateStats();
-}
-
-function renderClasses() {
-  const tbody = document.getElementById('classes-tbody');
-  const empty = document.getElementById('classes-empty');
-  tbody.innerHTML = '';
-  if (appData.classes.length === 0) { empty.style.display = 'block'; return; }
-  empty.style.display = 'none';
-  appData.classes.forEach(cls => {
-    tbody.innerHTML += `<tr>
-      <td><strong>${cls.name}</strong></td>
-      <td><span class="tag" style="background:#dbeafe;color:#1d4ed8">${cls.grade}</span></td>
-      <td>
-        <button class="btn btn-secondary btn-sm" onclick="openClassModal('${cls.id}')"><i class="fas fa-edit"></i></button>
-        <button class="btn btn-danger btn-sm" onclick="deleteClass('${cls.id}')"><i class="fas fa-trash"></i></button>
-      </td>
-    </tr>`;
-  });
-  document.getElementById('nb-classes').textContent = appData.classes.length;
-}
-
-// ════════════════════════════════════════
+// ══════════════════════════════════════════
 //  TEACHERS
-// ════════════════════════════════════════
-function openTeacherModal(id = null) {
-  // Init color swatches
-  const sw = document.getElementById('tm-colors');
-  sw.innerHTML = '';
-  TEACHER_COLORS.forEach(c => {
-    const s = document.createElement('span');
-    s.className = 'color-swatch';
-    s.style.background = c;
-    s.dataset.color = c;
-    s.onclick = () => { sw.querySelectorAll('.color-swatch').forEach(x => x.classList.remove('selected')); s.classList.add('selected'); };
-    sw.appendChild(s);
-  });
-
-  // Init days
-  const daysEl = document.getElementById('tm-days');
-  daysEl.innerHTML = '';
-  DAY_NAMES.forEach((name, i) => {
-    const btn = document.createElement('span');
-    btn.className = 'day-btn';
-    btn.dataset.day = i;
-    btn.textContent = name;
-    btn.addEventListener('click', () => btn.classList.toggle('active'));
-    daysEl.appendChild(btn);
-  });
-
-  document.getElementById('tm-id').value = id || '';
-  if (id) {
-    const t = appData.teachers.find(x => x.id === id);
-    document.getElementById('teacher-modal-title').textContent = 'تعديل معلم';
-    document.getElementById('tm-name').value = t.name;
-    document.getElementById('tm-subject').value = t.subject;
-    document.getElementById('tm-max').value = t.maxLoad;
-    // Select color
-    sw.querySelectorAll('.color-swatch').forEach(s => { if (s.dataset.color === t.color) s.classList.add('selected'); });
-    // Working days
-    daysEl.querySelectorAll('.day-btn').forEach(btn => {
-      btn.classList.toggle('active', t.workingDays.includes(parseInt(btn.dataset.day)));
-    });
+// ══════════════════════════════════════════
+function openTM(id=null){
+  const sw=$q('#tm-clr'); sw.innerHTML='';
+  COLORS.forEach(c=>{ const s=document.createElement('span'); s.className='cs'; s.style.background=c; s.dataset.c=c; s.onclick=()=>{ $a('.cs',sw).forEach(x=>x.classList.remove('on')); s.classList.add('on'); }; sw.appendChild(s); });
+  const de=$q('#tm-days'); de.innerHTML='';
+  DAYS.forEach((n,i)=>{ const b=document.createElement('span'); b.className='day-btn'; b.dataset.day=i; b.textContent=n; b.onclick=()=>b.classList.toggle('on'); de.appendChild(b); });
+  $q('#tm-id').value=id||'';
+  if(id){
+    const t=D.teachers.find(x=>x.id===id);
+    $q('#tm-ttl').textContent='تعديل معلم'; $q('#tm-n').value=t.name; $q('#tm-s').value=t.subject; $q('#tm-m').value=t.maxLoad;
+    $a(`.cs[data-c="${t.color}"]`,sw)[0]?.classList.add('on');
+    $a('[data-day]',de).forEach(b=>b.classList.toggle('on',t.workingDays.includes(+b.dataset.day)));
   } else {
-    document.getElementById('teacher-modal-title').textContent = 'إضافة معلم';
-    document.getElementById('tm-name').value = '';
-    document.getElementById('tm-max').value = 20;
-    sw.querySelector('.color-swatch').classList.add('selected');
-    // Default: all school days active
-    daysEl.querySelectorAll('.day-btn').forEach(btn => {
-      btn.classList.toggle('active', appData.school.schoolDays.includes(parseInt(btn.dataset.day)));
-    });
+    $q('#tm-ttl').textContent='إضافة معلم'; $q('#tm-n').value=''; $q('#tm-m').value=20;
+    sw.children[0]?.classList.add('on');
+    $a('[data-day]',de).forEach(b=>b.classList.toggle('on',D.school.schoolDays.includes(+b.dataset.day)));
   }
-  openModal('teacher-modal');
+  openM('tm');
+}
+function saveTeacher(){
+  const id=$q('#tm-id').value, name=$q('#tm-n').value.trim(), subject=$q('#tm-s').value;
+  const maxLoad=+$q('#tm-m').value;
+  const color=$a('.cs.on',$q('#tm-clr'))[0]?.dataset.c||COLORS[0];
+  const workingDays=$a('.day-btn.on',$q('#tm-days')).map(b=>+b.dataset.day);
+  if(!name) return toast('أدخل اسم المعلم','err');
+  if(id) Object.assign(D.teachers.find(x=>x.id===id),{name,subject,maxLoad,color,workingDays});
+  else D.teachers.push({id:'t'+Date.now(),name,subject,maxLoad,color,workingDays});
+  closeM('tm'); renderTCH(); updateStats();
+}
+function delTCH(id){ if(!confirm('حذف المعلم؟')) return; D.teachers=D.teachers.filter(t=>t.id!==id); D.assignments=D.assignments.filter(a=>a.teacherId!==id); Object.values(D.schedule).forEach(dy=>Object.values(dy).forEach(p=>{ Object.keys(p).forEach(cid=>{ if(p[cid]?.teacherId===id) delete p[cid]; }); })); renderTCH(); updateStats(); }
+function renderTCH(){
+  const tb=$q('#tch-tb'), em=$q('#tch-em'); tb.innerHTML='';
+  if(!D.teachers.length){ em.style.display='block'; return; } em.style.display='none';
+  D.teachers.forEach(t=>{ tb.innerHTML+=`<tr><td><strong>${t.name}</strong></td><td><span class="tag" style="background:#f0fdf4;color:#166534">${t.subject}</span></td><td><span style="display:inline-block;width:16px;height:16px;border-radius:50%;background:${t.color};border:2px solid #e2e8f0"></span></td><td><strong>${t.maxLoad}</strong> حصة</td><td style="font-size:10px;color:var(--muted)">${t.workingDays.map(d=>DAYS[d]).join(' · ')}</td><td><button class="btn bs bsm" onclick="openTM('${t.id}')"><i class="fas fa-edit"></i></button> <button class="btn bd bsm" onclick="delTCH('${t.id}')"><i class="fas fa-trash"></i></button></td></tr>`; });
+  $q('#nb-t').textContent=D.teachers.length;
 }
 
-function saveTeacher() {
-  const id = document.getElementById('tm-id').value;
-  const name = document.getElementById('tm-name').value.trim();
-  const subject = document.getElementById('tm-subject').value;
-  const maxLoad = parseInt(document.getElementById('tm-max').value);
-  const selectedColor = document.querySelector('#tm-colors .color-swatch.selected')?.dataset.color || TEACHER_COLORS[0];
-  const workingDays = [...document.querySelectorAll('#tm-days .day-btn.active')].map(b => parseInt(b.dataset.day));
-
-  if (!name) return showToast('أدخل اسم المعلم', 'error');
-
-  if (id) {
-    const t = appData.teachers.find(x => x.id === id);
-    Object.assign(t, { name, subject, maxLoad, color: selectedColor, workingDays });
-  } else {
-    appData.teachers.push({ id: 't' + Date.now(), name, subject, maxLoad, color: selectedColor, workingDays });
-  }
-  closeModal('teacher-modal');
-  renderTeachers();
-  updateStats();
-}
-
-function deleteTeacher(id) {
-  if (!confirm('حذف المعلم وجميع إسنادaته؟')) return;
-  appData.teachers = appData.teachers.filter(t => t.id !== id);
-  appData.assignments = appData.assignments.filter(a => a.teacherId !== id);
-  Object.values(appData.schedule).forEach(day => {
-    Object.values(day).forEach(period => {
-      Object.keys(period).forEach(cid => {
-        if (period[cid]?.teacherId === id) delete period[cid];
-      });
-    });
-  });
-  renderTeachers(); renderAssignments(); updateStats();
-}
-
-function renderTeachers() {
-  const tbody = document.getElementById('teachers-tbody');
-  const empty = document.getElementById('teachers-empty');
-  tbody.innerHTML = '';
-  if (appData.teachers.length === 0) { empty.style.display = 'block'; return; }
-  empty.style.display = 'none';
-  appData.teachers.forEach(t => {
-    const activeDays = t.workingDays.map(d => DAY_NAMES[d]).join(' · ') || 'لا يوجد';
-    tbody.innerHTML += `<tr>
-      <td><strong>${t.name}</strong></td>
-      <td><span class="tag" style="background:#f0fdf4;color:#166534">${t.subject}</span></td>
-      <td><span style="display:inline-block;width:18px;height:18px;border-radius:50%;background:${t.color};border:2px solid #e2e8f0"></span></td>
-      <td><strong>${t.maxLoad}</strong> حصة</td>
-      <td style="font-size:11px;color:var(--muted)">${activeDays}</td>
-      <td>
-        <button class="btn btn-secondary btn-sm" onclick="openTeacherModal('${t.id}')"><i class="fas fa-edit"></i></button>
-        <button class="btn btn-danger btn-sm" onclick="deleteTeacher('${t.id}')"><i class="fas fa-trash"></i></button>
-      </td>
-    </tr>`;
-  });
-  document.getElementById('nb-teachers').textContent = appData.teachers.length;
-}
-
-// ════════════════════════════════════════
+// ══════════════════════════════════════════
 //  ASSIGNMENTS
-// ════════════════════════════════════════
-function openAssignModal() {
-  // Fill teacher select
-  const ts = document.getElementById('am-teacher');
-  ts.innerHTML = '<option value="">-- اختر المعلم --</option>';
-  appData.teachers.forEach(t => ts.innerHTML += `<option value="${t.id}">${t.name} (${t.subject})</option>`);
-
-  // Fill class select
-  const cs = document.getElementById('am-class');
-  cs.innerHTML = '<option value="">-- اختر الفصل --</option>';
-  appData.classes.forEach(c => cs.innerHTML += `<option value="${c.id}">${c.name} - ${c.grade}</option>`);
-
-  openModal('assign-modal');
+// ══════════════════════════════════════════
+function openAM(){
+  const ts=$q('#am-t'); ts.innerHTML='<option value="">-- اختر المعلم --</option>'; D.teachers.forEach(t=>ts.innerHTML+=`<option value="${t.id}">${t.name} (${t.subject})</option>`);
+  const cs=$q('#am-c'); cs.innerHTML='<option value="">-- اختر الفصل --</option>'; D.classes.forEach(c=>cs.innerHTML+=`<option value="${c.id}">${c.name} - ${c.grade}</option>`);
+  openM('am');
+}
+function saveAssign(){
+  const tid=$q('#am-t').value, cid=$q('#am-c').value, cnt=+$q('#am-n').value;
+  if(!tid||!cid) return toast('اختر المعلم والفصل','err');
+  const t=D.teachers.find(x=>x.id===tid);
+  const ex=D.assignments.find(a=>a.teacherId===tid&&a.classId===cid);
+  if(ex){ ex.count=cnt; toast('تم التحديث'); }
+  else D.assignments.push({id:'a'+Date.now(),teacherId:tid,classId:cid,count:cnt,subject:t.subject,color:t.color});
+  closeM('am'); renderASG(); updateStats();
+}
+function delASG(id){ D.assignments=D.assignments.filter(a=>a.id!==id); renderASG(); updateStats(); }
+function autoAssign(){
+  if(!D.teachers.length||!D.classes.length) return toast('أضف معلمين وفصولاً','err');
+  if(!confirm('إنشاء إسناد تلقائي؟')) return;
+  D.classes.forEach(cls=>D.teachers.forEach(t=>{ if(!D.assignments.find(a=>a.teacherId===t.id&&a.classId===cls.id)){ const tot=D.assignments.filter(a=>a.teacherId===t.id).reduce((s,a)=>s+a.count,0); if(tot+4<=t.maxLoad) D.assignments.push({id:'a'+Date.now()+Math.random(),teacherId:t.id,classId:cls.id,count:4,subject:t.subject,color:t.color}); } }));
+  renderASG(); updateStats(); toast('تم الإسناد التلقائي','ok');
+}
+function renderASG(){
+  const tb=$q('#asg-tb'), em=$q('#asg-em'); tb.innerHTML='';
+  if(!D.assignments.length){ em.style.display='block'; return; } em.style.display='none';
+  D.assignments.forEach(a=>{ const t=D.teachers.find(x=>x.id===a.teacherId), cls=D.classes.find(x=>x.id===a.classId); if(!t||!cls) return; tb.innerHTML+=`<tr><td><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${t.color};margin-left:5px"></span><strong>${t.name}</strong></td><td>${a.subject}</td><td><span class="tag" style="background:#ede9fe;color:#5b21b6">${cls.name}</span></td><td><strong>${a.count}</strong></td><td><button class="btn bd bsm" onclick="delASG('${a.id}')"><i class="fas fa-times"></i></button></td></tr>`; });
+  $q('#nb-a').textContent=D.assignments.length;
 }
 
-function saveAssignment() {
-  const teacherId = document.getElementById('am-teacher').value;
-  const classId = document.getElementById('am-class').value;
-  const count = parseInt(document.getElementById('am-count').value);
-  if (!teacherId || !classId) return showToast('اختر المعلم والفصل', 'error');
+// ══════════════════════════════════════════
+//  CONSTRAINTS
+// ══════════════════════════════════════════
+function getCst(tid){ if(!D.constraints[tid]) D.constraints[tid]={blocked:[],preferred:[],maxConsec:3,maxPerDay:6}; return D.constraints[tid]; }
+function isBlocked(tid,d,p){ return getCst(tid).blocked.some(([dd,pp])=>dd===d&&pp===p); }
+function isPreferred(tid,d,p){ return getCst(tid).preferred.some(([dd,pp])=>dd===d&&pp===p); }
 
-  const t = appData.teachers.find(x => x.id === teacherId);
-  const existing = appData.assignments.find(a => a.teacherId === teacherId && a.classId === classId);
-  if (existing) {
-    existing.count = count;
-    showToast('تم تحديث الإسناد', 'success');
-  } else {
-    appData.assignments.push({ id: 'a' + Date.now(), teacherId, classId, count, subject: t.subject, color: t.color });
-  }
-  closeModal('assign-modal');
-  renderAssignments();
-  updateStats();
+function fillConstraintSel(){
+  const sel=$q('#cst-teacher-sel'); sel.innerHTML='<option value="">-- اختر معلماً --</option>';
+  D.teachers.forEach(t=>sel.innerHTML+=`<option value="${t.id}">${t.name} (${t.subject})</option>`);
+  // Update badge
+  const total=D.teachers.reduce((s,t)=>s+(getCst(t.id).blocked.length+getCst(t.id).preferred.length),0);
+  $q('#nb-cst').textContent=total||'!';
 }
 
-function deleteAssignment(id) {
-  appData.assignments = appData.assignments.filter(a => a.id !== id);
-  renderAssignments(); updateStats();
+function renderConstraints(){
+  const tid=$q('#cst-teacher-sel').value;
+  const body=$q('#cst-body');
+  if(!tid){ body.innerHTML=`<div class="es"><i class="fas fa-ban"></i><p>اختر معلماً لتحرير قيوده.</p></div>`; return; }
+  const t=D.teachers.find(x=>x.id===tid);
+  const cst=getCst(tid);
+  const days=D.school.schoolDays, periods=D.school.periods;
+
+  let html=`
+  <div class="cst-legend">
+    <strong style="font-size:12px">انقر لتبديل:</strong>
+    <span><span class="dot" style="background:#f1f5f9;border:1px solid #cbd5e1"></span> متاح</span>
+    <span><span class="dot" style="background:#fee2e2"></span> محجوب (لن تُجدَّل)</span>
+    <span><span class="dot" style="background:#d1fae5"></span> مفضّل (يُرجَّح)</span>
+    <span style="font-size:10px;color:var(--muted)">(انقر مرة = محجوب · مرتين = مفضّل · ثلاث = متاح)</span>
+  </div>
+  <div style="background:#fff;border-radius:12px;padding:16px;box-shadow:0 1px 4px rgba(0,0,0,.06);margin-bottom:14px">
+    <h4 style="font-size:13px;font-weight:700;margin-bottom:12px">
+      <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${t.color};margin-left:7px"></span>
+      قيود الحصص: ${t.name}
+    </h4>
+    <div style="overflow-x:auto">
+    <table style="border-collapse:separate;border-spacing:3px">
+      <thead><tr><th style="text-align:right;padding:4px 8px;font-size:11px;color:var(--muted);font-weight:600;background:none">اليوم \ الحصة</th>`;
+  for(let p=0;p<periods;p++) html+=`<th style="width:40px;text-align:center;font-size:11px;font-weight:600;color:var(--muted);padding:4px;background:none">ح${p+1}</th>`;
+  html+=`</tr></thead><tbody>`;
+
+  days.forEach(d=>{
+    const isOff=!t.workingDays.includes(d);
+    html+=`<tr><td style="font-size:11px;font-weight:600;padding:4px 8px;color:${isOff?'#ef4444':'var(--text)'};white-space:nowrap">${DAYS[d]}${isOff?' (إجازة)':''}</td>`;
+    for(let p=0;p<periods;p++){
+      const blk=isBlocked(tid,d,p), pref=isPreferred(tid,d,p);
+      const bg=isOff?'#fef2f2':blk?'#fee2e2':pref?'#d1fae5':'#f1f5f9';
+      const cl=isOff?'#f87171':blk?'#dc2626':pref?'#059669':'#94a3b8';
+      const ico=isOff?'—':blk?'✕':pref?'★':'';
+      html+=`<td style="padding:0"><button onclick="toggleSlot('${tid}',${d},${p})" ${isOff?'disabled':''} style="width:40px;height:38px;border-radius:7px;border:1px solid ${isOff?'#fecaca':blk?'#fca5a5':pref?'#6ee7b7':'#e2e8f0'};background:${bg};color:${cl};cursor:${isOff?'not-allowed':'pointer'};font-size:13px;font-weight:700;transition:.12s;font-family:Cairo,sans-serif" title="${isOff?'يوم إجازة':blk?'محجوب - انقر للتغيير':pref?'مفضّل - انقر للتغيير':'متاح - انقر لتغيير'}">${ico}</button></td>`;
+    }
+    html+='</tr>';
+  });
+  html+=`</tbody></table></div></div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+    <div style="background:#fff;border-radius:12px;padding:14px;box-shadow:0 1px 4px rgba(0,0,0,.06)">
+      <h4 style="font-size:12px;font-weight:700;margin-bottom:10px"><i class="fas fa-layer-group" style="color:var(--acc);margin-left:5px"></i>قيود الكمية اليومية</h4>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+        <label style="font-size:12px">الحد الأقصى لحصص في اليوم</label>
+        <input type="number" value="${cst.maxPerDay}" min="1" max="${periods}" oninput="getCst('${tid}').maxPerDay=+this.value" style="width:55px;padding:4px 7px;border:1px solid var(--border);border-radius:6px;font-size:12px;font-family:Cairo,sans-serif;text-align:center">
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <label style="font-size:12px">الحد الأقصى للحصص المتتالية</label>
+        <input type="number" value="${cst.maxConsec}" min="1" max="${periods}" oninput="getCst('${tid}').maxConsec=+this.value" style="width:55px;padding:4px 7px;border:1px solid var(--border);border-radius:6px;font-size:12px;font-family:Cairo,sans-serif;text-align:center">
+      </div>
+    </div>
+    <div style="background:#fff;border-radius:12px;padding:14px;box-shadow:0 1px 4px rgba(0,0,0,.06)">
+      <h4 style="font-size:12px;font-weight:700;margin-bottom:8px"><i class="fas fa-info-circle" style="color:var(--muted);margin-left:5px"></i>ملخص القيود</h4>
+      <div style="font-size:12px;color:var(--muted);line-height:2">
+        <div>محجوبة: <strong style="color:var(--danger)">${cst.blocked.length} حصة</strong></div>
+        <div>مفضّلة: <strong style="color:var(--success)">${cst.preferred.length} حصة</strong></div>
+        <div>أقصى يومي: <strong>${cst.maxPerDay}</strong></div>
+        <div>أقصى متتالي: <strong>${cst.maxConsec}</strong></div>
+      </div>
+    </div>
+  </div>`;
+
+  body.innerHTML=html;
+  fillConstraintSel();
 }
 
-function autoAssign() {
-  if (appData.teachers.length === 0 || appData.classes.length === 0) return showToast('أضف معلمين وفصولاً أولاً', 'error');
-  if (!confirm('سيتم إنشاء إسناد تلقائي (لن يمسح الإسناد الحالي). متابعة؟')) return;
+function toggleSlot(tid,d,p){
+  const cst=getCst(tid);
+  const bi=cst.blocked.findIndex(([dd,pp])=>dd===d&&pp===p);
+  const pi=cst.preferred.findIndex(([dd,pp])=>dd===d&&pp===p);
+  if(bi>=0){ cst.blocked.splice(bi,1); cst.preferred.push([d,p]); }       // blocked→preferred
+  else if(pi>=0){ cst.preferred.splice(pi,1); }                             // preferred→free
+  else { cst.blocked.push([d,p]); }                                         // free→blocked
+  renderConstraints();
+}
 
-  appData.classes.forEach(cls => {
-    appData.teachers.forEach(t => {
-      const exists = appData.assignments.find(a => a.teacherId === t.id && a.classId === cls.id);
-      if (!exists) {
-        // Only add if teacher doesn't already have too many
-        const teacherTotal = appData.assignments.filter(a => a.teacherId === t.id).reduce((s, a) => s + a.count, 0);
-        if (teacherTotal + 5 <= t.maxLoad) {
-          appData.assignments.push({ id: 'a' + Date.now() + Math.random(), teacherId: t.id, classId: cls.id, count: 5, subject: t.subject, color: t.color });
-        }
+// ══════════════════════════════════════════
+//  SCHEDULER ENGINE
+// ══════════════════════════════════════════
+let chosenAlgo='bt';
+function selAlgo(a){
+  chosenAlgo=a;
+  $q('#algo-bt').classList.toggle('on',a==='bt');
+  $q('#algo-gr').classList.toggle('on',a==='gr');
+}
+
+// ── SCORING FUNCTION ──
+function scoreSchedule(sched){
+  const days=D.school.schoolDays, periods=D.school.periods;
+  const weights={ gap:+$q('#w-gap').value, bal:+$q('#w-bal').value, pref:+$q('#w-pref').value, comp:+$q('#w-comp').value, rep:+$q('#w-rep').value };
+  let totalW=Object.values(weights).reduce((s,v)=>s+v,0)||1;
+  let penalty=0, bonus=0;
+
+  D.teachers.forEach(t=>{
+    const cst=getCst(t.id);
+    days.forEach(d=>{
+      // gather teacher's periods on this day sorted
+      const teacherPeriods=[];
+      for(let p=0;p<periods;p++){
+        const slot=sched[d]?.[p]||{};
+        if(Object.values(slot).some(x=>x?.teacherId===t.id)) teacherPeriods.push(p);
+      }
+      const cnt=teacherPeriods.length;
+      // balance: penalize uneven distribution
+      const avgPerDay=(D.assignments.filter(a=>a.teacherId===t.id).reduce((s,a)=>s+a.count,0))/days.length;
+      penalty+=weights.bal*Math.abs(cnt-avgPerDay)*0.5;
+      // consecutive: penalize long runs
+      let run=0, maxRun=0;
+      for(let i=0;i<teacherPeriods.length;i++){
+        if(i>0&&teacherPeriods[i]-teacherPeriods[i-1]===1) run++;
+        else run=0;
+        maxRun=Math.max(maxRun,run);
+      }
+      if(maxRun>=cst.maxConsec) penalty+=weights.gap*(maxRun-cst.maxConsec+1)*3;
+      // gaps (free periods between lessons): penalize
+      if(teacherPeriods.length>1){
+        const span=teacherPeriods[teacherPeriods.length-1]-teacherPeriods[0]+1;
+        const gaps=span-teacherPeriods.length;
+        penalty+=weights.comp*gaps*0.8;
+      }
+      // preferred slots: bonus
+      for(const [pd,pp] of cst.preferred){
+        if(pd===d&&teacherPeriods.includes(pp)) bonus+=weights.pref*2;
+      }
+      // blocked slots: hard violation (should not happen)
+      for(const [bd,bp] of cst.blocked){
+        if(bd===d&&teacherPeriods.includes(bp)) penalty+=100;
       }
     });
   });
-  renderAssignments(); updateStats();
-  showToast('تم إنشاء الإسناد التلقائي', 'success');
-}
 
-function renderAssignments() {
-  const tbody = document.getElementById('assignments-tbody');
-  const empty = document.getElementById('assignments-empty');
-  tbody.innerHTML = '';
-  if (appData.assignments.length === 0) { empty.style.display = 'block'; return; }
-  empty.style.display = 'none';
-  appData.assignments.forEach(a => {
-    const t = appData.teachers.find(x => x.id === a.teacherId);
-    const cls = appData.classes.find(x => x.id === a.classId);
-    if (!t || !cls) return;
-    tbody.innerHTML += `<tr>
-      <td>
-        <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${t.color};margin-left:6px"></span>
-        <strong>${t.name}</strong>
-      </td>
-      <td>${a.subject}</td>
-      <td><span class="tag" style="background:#ede9fe;color:#5b21b6">${cls.name}</span></td>
-      <td><strong>${a.count}</strong></td>
-      <td><button class="btn btn-danger btn-sm" onclick="deleteAssignment('${a.id}')"><i class="fas fa-times"></i></button></td>
-    </tr>`;
+  // subject repeat per class per day
+  D.classes.forEach(cls=>{
+    days.forEach(d=>{
+      const subjectCount={};
+      for(let p=0;p<periods;p++){
+        const cell=sched[d]?.[p]?.[cls.id];
+        if(cell){ subjectCount[cell.subject]=(subjectCount[cell.subject]||0)+1; }
+      }
+      Object.values(subjectCount).forEach(cnt=>{ if(cnt>1) penalty+=weights.rep*(cnt-1)*2; });
+    });
   });
-  document.getElementById('nb-assignments').textContent = appData.assignments.length;
+
+  // Max score = 100
+  const raw=Math.max(0,100-penalty+bonus*0.5);
+  return Math.min(100,Math.round(raw));
 }
 
-// ════════════════════════════════════════
-//  GENERATOR ENGINE
-// ════════════════════════════════════════
-async function runGenerator() {
-  const btn = document.getElementById('gen-btn');
-  const log = document.getElementById('gen-logs');
-  const fill = document.getElementById('gen-progress-fill');
-  const wrap = document.getElementById('gen-progress-wrap');
-
-  btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> يعمل...';
-  wrap.style.display = 'block'; log.style.display = 'block'; log.innerHTML = '';
-  fill.style.width = '0%';
-
-  // Reset schedule
-  appData.schedule = {};
-  initScheduleStructure();
-
-  const log_ = (msg, type='') => {
-    log.innerHTML += `<div class="${type?'log-'+type:''}">${msg}</div>`;
-    log.scrollTop = log.scrollHeight;
-  };
-
-  log_('> تهيئة محرك الجدولة...');
-  await sleep(100);
-
-  const schoolDays = appData.school.schoolDays;
-  const periods = appData.school.periods;
-
-  // Expand assignments to tasks
-  const tasks = [];
-  appData.assignments.forEach(a => {
-    const t = appData.teachers.find(x => x.id === a.teacherId);
-    if (!t) return;
-    for (let i = 0; i < a.count; i++) {
-      tasks.push({ teacherId: a.teacherId, classId: a.classId, subject: a.subject, color: t.color, assignId: a.id });
+// ── CONSTRAINT CHECKER ──
+function canPlaceCell(sched,tid,d,p,classId,fromD=null,fromP=null,fromC=null){
+  const t=D.teachers.find(x=>x.id===tid);
+  if(!t||!t.workingDays.includes(d)) return {ok:false,reason:`${t?.name} لا يعمل يوم ${DAYS[d]}`};
+  if(!D.school.schoolDays.includes(d)) return {ok:false,reason:'يوم غير دراسي'};
+  const cst=getCst(tid);
+  // blocked slot
+  if(isBlocked(tid,d,p)) return {ok:false,reason:`الحصة ${p+1} يوم ${DAYS[d]} محجوبة لهذا المعلم`};
+  const slot=sched[d]?.[p]||{};
+  // teacher busy?
+  for(const cid of Object.keys(slot)){
+    if(slot[cid]?.teacherId===tid){
+      if(fromD===d&&fromP===p&&cid===fromC) continue; // moving from this spot
+      return {ok:false,reason:`${t.name} مشغول الحصة ${p+1} يوم ${DAYS[d]}`};
     }
+  }
+  // class busy?
+  if(slot[classId]){
+    if(fromD===d&&fromP===p&&fromC===classId){/* moving from same spot, ok */}
+    else return {ok:false,reason:`الفصل مشغول الحصة ${p+1} يوم ${DAYS[d]}`};
+  }
+  // max per day
+  const teacherToday=[];
+  for(let pp=0;pp<D.school.periods;pp++){
+    const s=sched[d]?.[pp]||{};
+    if(Object.values(s).some(x=>x?.teacherId===tid)){
+      if(!(fromD===d&&fromP===pp)) teacherToday.push(pp);
+    }
+  }
+  if(teacherToday.length>=cst.maxPerDay) return {ok:false,reason:`تجاوز الحد الأقصى (${cst.maxPerDay}) لحصص اليوم`};
+  // max consecutive
+  const allToday=[...teacherToday,p].sort((a,b)=>a-b);
+  let maxRun=0,run=0;
+  for(let i=0;i<allToday.length;i++){ if(i>0&&allToday[i]-allToday[i-1]===1) run++; else run=0; maxRun=Math.max(maxRun,run); }
+  if(maxRun>=cst.maxConsec) return {ok:false,reason:`تجاوز الحد الأقصى (${cst.maxConsec}) للحصص المتتالية`};
+  return {ok:true};
+}
+
+// ── SORT TASKS: MRV (Most Restricted Variable first) ──
+function sortTasksMRV(tasks){
+  return tasks.map(task=>{
+    const t=D.teachers.find(x=>x.id===task.teacherId);
+    const cst=getCst(task.teacherId);
+    const days=D.school.schoolDays, periods=D.school.periods;
+    let available=0;
+    days.forEach(d=>{
+      if(!t.workingDays.includes(d)) return;
+      for(let p=0;p<periods;p++){
+        if(!isBlocked(task.teacherId,d,p)) available++;
+      }
+    });
+    // Fewer available slots = more restricted = higher priority
+    const degree=D.assignments.filter(a=>a.teacherId===task.teacherId||a.classId===task.classId).length;
+    return {...task, _avail:available, _deg:degree, _pref:cst.preferred.length};
+  }).sort((a,b)=>{
+    // primary: most blocked (least available) first
+    if(a._avail!==b._avail) return a._avail-b._avail;
+    // secondary: most constrained (highest degree) first
+    return b._deg-a._deg;
   });
+}
 
-  log_(`> ${tasks.length} حصة للتوزيع على ${schoolDays.length} أيام × ${periods} حصة`);
-  await sleep(100);
+// ── SLOT SCORER (for ordering slots when placing) ──
+function scoreSlot(sched,task,d,p,weights){
+  let score=0;
+  const tid=task.teacherId, cid=task.classId;
+  const cst=getCst(tid);
+  // preferred bonus
+  if(isPreferred(tid,d,p)) score+=weights.pref*10;
+  // balance: prefer days with fewer lessons for this teacher
+  const teacherToday=Object.values(sched[d]||{}).filter(s=>Object.values(s).some(x=>x?.teacherId===tid)).length;
+  score-=weights.bal*teacherToday*2;
+  // compactness: prefer slots adjacent to existing lessons
+  const hasAdj=(sched[d]?.[p-1]&&Object.values(sched[d][p-1]).some(x=>x?.teacherId===tid))||(sched[d]?.[p+1]&&Object.values(sched[d][p+1]||{}).some(x=>x?.teacherId===tid));
+  if(hasAdj) score+=weights.comp*3;
+  // subject repeat penalty
+  const subjectToday=Object.values(sched[d]||{}).filter(s=>s[cid]?.subject===task.subject).length;
+  score-=weights.rep*subjectToday*5;
+  // gap penalty: penalize if placing creates gaps
+  const allToday=[];
+  for(let pp=0;pp<D.school.periods;pp++) if(Object.values(sched[d]?.[pp]||{}).some(x=>x?.teacherId===tid)) allToday.push(pp);
+  if(allToday.length>0){
+    const minP=Math.min(...allToday,p), maxP=Math.max(...allToday,p);
+    score-=weights.gap*(maxP-minP-allToday.length)*1.5;
+  }
+  return score;
+}
 
-  // Shuffle
-  tasks.sort(() => Math.random() - 0.5);
+// ── GREEDY ALGORITHM ──
+async function runGreedy(tasks,weights,addLog,setProgress){
+  const sched={};
+  D.school.schoolDays.forEach(d=>{ sched[d]={}; for(let p=0;p<D.school.periods;p++) sched[d][p]={}; });
+  const tLoad={};
+  D.teachers.forEach(t=>tLoad[t.id]=0);
+  let ok=0,fail=0;
+  const sortedTasks=sortTasksMRV(tasks);
+  addLog(`> MRV: ترتيب ${sortedTasks.length} حصة حسب الأكثر تقييداً...`,'info');
+  await sleep(60);
 
-  const teacherLoad = {};
-  appData.teachers.forEach(t => teacherLoad[t.id] = 0);
+  for(let i=0;i<sortedTasks.length;i++){
+    const task=sortedTasks[i];
+    const teacher=D.teachers.find(x=>x.id===task.teacherId);
+    const cst=getCst(task.teacherId);
+    if(tLoad[task.teacherId]>=teacher.maxLoad){ fail++; continue; }
 
-  let success = 0, failed = 0;
-
-  // Better scheduling: try to distribute evenly per day
-  for (let i = 0; i < tasks.length; i++) {
-    const task = tasks[i];
-    const teacher = appData.teachers.find(x => x.id === task.teacherId);
-
-    // Check max load
-    if (teacherLoad[teacher.id] >= teacher.maxLoad) { failed++; continue; }
-
-    // Generate slots sorted by: least loaded day first
-    let slots = [];
-    for (const d of schoolDays) {
-      if (!teacher.workingDays.includes(d)) continue;
-      for (let p = 0; p < periods; p++) {
-        slots.push({ d, p });
+    // Build candidate slots with scores
+    let slots=[];
+    for(const d of D.school.schoolDays){
+      if(!teacher.workingDays.includes(d)) continue;
+      for(let p=0;p<D.school.periods;p++){
+        const chk=canPlaceCell(sched,task.teacherId,d,p,task.classId);
+        if(chk.ok) slots.push({d,p,score:scoreSlot(sched,task,d,p,weights)});
       }
     }
-    // Shuffle
-    slots.sort(() => Math.random() - 0.5);
+    slots.sort((a,b)=>b.score-a.score); // best slot first
 
-    let placed = false;
-    for (const { d, p } of slots) {
-      // Check teacher busy
-      const teacherBusy = Object.values(appData.schedule[d]?.[p] || {}).some(x => x?.teacherId === task.teacherId);
-      if (teacherBusy) continue;
+    let placed=false;
+    for(const {d,p} of slots){
+      sched[d][p][task.classId]={teacherId:task.teacherId,subject:task.subject,color:task.color,assignId:task.assignId};
+      tLoad[task.teacherId]++; ok++; placed=true; break;
+    }
+    if(!placed) fail++;
+    if(i%20===0){ setProgress((i/sortedTasks.length)*85); await sleep(4); }
+  }
+  return {sched,ok,fail};
+}
 
-      // Check class busy
-      if (appData.schedule[d]?.[p]?.[task.classId]) continue;
+// ── BACKTRACKING ALGORITHM ──
+async function runBacktracking(tasks,weights,addLog,setProgress){
+  const sched={};
+  D.school.schoolDays.forEach(d=>{ sched[d]={}; for(let p=0;p<D.school.periods;p++) sched[d][p]={}; });
+  const tLoad={};
+  D.teachers.forEach(t=>tLoad[t.id]=0);
 
-      // Check: max 2 lessons per class per day (soft constraint)
-      const classLessonsToday = Object.values(appData.schedule[d] || {}).filter(pp => pp[task.classId]).length;
-      if (classLessonsToday >= 3) continue;
+  const sortedTasks=sortTasksMRV(tasks);
+  addLog(`> Backtracking: ${sortedTasks.length} حصة مرتبة بـ MRV...`,'info');
+  await sleep(60);
 
-      // Check: max daily load per teacher (periods/day * 0.6)
-      const teacherLessonsToday = Object.values(appData.schedule[d] || {}).reduce((s, pp) => {
-        return s + Object.values(pp).filter(x => x?.teacherId === task.teacherId).length;
-      }, 0);
-      if (teacherLessonsToday >= Math.ceil(periods * 0.65)) continue;
+  // For large problems, use BT with early termination after max attempts
+  const MAX_BACKTRACKS=1500;
+  let backtracks=0, ok=0, fail=0;
 
+  async function bt(idx){
+    if(idx>=sortedTasks.length) return true;
+    const task=sortedTasks[idx];
+    const teacher=D.teachers.find(x=>x.id===task.teacherId);
+    if(tLoad[task.teacherId]>=teacher.maxLoad){ fail++; return await bt(idx+1); }
+
+    // Build + sort slots
+    let slots=[];
+    for(const d of D.school.schoolDays){
+      if(!teacher.workingDays.includes(d)) continue;
+      for(let p=0;p<D.school.periods;p++){
+        if(canPlaceCell(sched,task.teacherId,d,p,task.classId).ok)
+          slots.push({d,p,score:scoreSlot(sched,task,d,p,weights)});
+      }
+    }
+    slots.sort((a,b)=>b.score-a.score);
+
+    for(const {d,p} of slots){
+      if(backtracks>MAX_BACKTRACKS) break; // give up BT, place greedily
       // Place
-      if (!appData.schedule[d]) appData.schedule[d] = {};
-      if (!appData.schedule[d][p]) appData.schedule[d][p] = {};
-      appData.schedule[d][p][task.classId] = {
-        teacherId: task.teacherId,
-        subject: task.subject,
-        color: task.color,
-        assignId: task.assignId
-      };
-      teacherLoad[teacher.id]++;
-      success++; placed = true; break;
-    }
+      sched[d][p][task.classId]={teacherId:task.teacherId,subject:task.subject,color:task.color,assignId:task.assignId};
+      tLoad[task.teacherId]++;
+      ok++;
 
-    if (!placed) failed++;
+      if(idx%30===0){ setProgress((idx/sortedTasks.length)*75); await sleep(2); }
 
-    if (i % 15 === 0) {
-      fill.style.width = `${(i / tasks.length) * 100}%`;
-      await sleep(5);
-    }
-  }
-
-  fill.style.width = '100%';
-  log_(`> ✓ تم توزيع ${success} حصة بنجاح`, 'success');
-  if (failed > 0) log_(`> ✗ فشل توزيع ${failed} حصة بسبب قيود التعارض`, 'error');
-  log_(`> اكتمل التوزيع!`, 'success');
-
-  btn.disabled = false; btn.innerHTML = '<i class="fas fa-play"></i> إعادة التوزيع';
-  updateStats();
-  showToast(`تم! ${success} حصة موزعة${failed > 0 ? ` · ${failed} فشلت` : ''}`, success > 0 ? 'success' : 'error');
-}
-
-function clearSchedule() {
-  if (!confirm('مسح الجدول كاملاً؟')) return;
-  appData.schedule = {};
-  initScheduleStructure();
-  updateStats();
-  showToast('تم مسح الجدول', 'success');
-}
-
-const sleep = ms => new Promise(r => setTimeout(r, ms));
-
-// ════════════════════════════════════════
-//  TIMETABLE INTERACTIVE VIEW
-// ════════════════════════════════════════
-let ttView = 'class'; // 'class' or 'teacher'
-let ttEntityIndex = 0;
-let draggedLesson = null;
-
-function setTTView(view) {
-  ttView = view;
-  document.querySelectorAll('.view-tab').forEach(b => b.classList.remove('active'));
-  event.target.classList.add('active');
-  ttEntityIndex = 0;
-  renderTTToolbar();
-  renderTTGrid();
-  renderUnscheduledPool();
-}
-
-function ttSelectEntity(val) {
-  const entities = ttView === 'class' ? appData.classes : appData.teachers;
-  const idx = entities.findIndex(e => e.id === val);
-  if (idx >= 0) { ttEntityIndex = idx; renderTTGrid(); renderUnscheduledPool(); }
-}
-
-function ttNavPrev() {
-  const entities = ttView === 'class' ? appData.classes : appData.teachers;
-  if (entities.length === 0) return;
-  ttEntityIndex = (ttEntityIndex - 1 + entities.length) % entities.length;
-  renderTTToolbar(); renderTTGrid(); renderUnscheduledPool();
-}
-
-function ttNavNext() {
-  const entities = ttView === 'class' ? appData.classes : appData.teachers;
-  if (entities.length === 0) return;
-  ttEntityIndex = (ttEntityIndex + 1) % entities.length;
-  renderTTToolbar(); renderTTGrid(); renderUnscheduledPool();
-}
-
-function renderTTToolbar() {
-  const sel = document.getElementById('tt-entity-select');
-  const entities = ttView === 'class' ? appData.classes : appData.teachers;
-  sel.innerHTML = '';
-  entities.forEach((e, i) => {
-    const opt = document.createElement('option');
-    opt.value = e.id;
-    opt.textContent = ttView === 'class' ? `${e.name} - ${e.grade}` : e.name;
-    if (i === ttEntityIndex) opt.selected = true;
-    sel.appendChild(opt);
-  });
-}
-
-function renderTTGrid() {
-  const container = document.getElementById('tt-grid-container');
-  const days = appData.school.schoolDays;
-  const periods = appData.school.periods;
-  const entities = ttView === 'class' ? appData.classes : appData.teachers;
-
-  if (entities.length === 0) {
-    container.innerHTML = `<div class="empty-state"><i class="fas fa-calendar"></i><p>أضف ${ttView === 'class' ? 'فصولاً' : 'معلمين'} أولاً</p></div>`;
-    return;
-  }
-
-  const entity = entities[Math.min(ttEntityIndex, entities.length - 1)];
-  renderTTToolbar();
-
-  // Period header labels
-  let periodHeaders = '<th></th>';
-  for (let p = 0; p < periods; p++) periodHeaders += `<th>الحصة ${p + 1}</th>`;
-
-  let rows = '';
-  let hasConflict = false;
-
-  days.forEach(d => {
-    const teacher = ttView === 'teacher' ? entity : null;
-    const isOff = ttView === 'teacher' && !entity.workingDays.includes(d);
-
-    let cells = `<th class="day-header">${DAY_NAMES[d]}</th>`;
-    for (let p = 0; p < periods; p++) {
-      const periodData = appData.schedule[d]?.[p] || {};
-
-      let lesson = null;
-      if (ttView === 'class') {
-        lesson = periodData[entity.id];
-        if (lesson) {
-          const t = appData.teachers.find(x => x.id === lesson.teacherId);
-          lesson._teacherName = t?.name || '?';
-          lesson._teacherColor = t?.color || '#888';
-        }
-      } else {
-        // teacher view: find which class at d,p
-        for (const cid of Object.keys(periodData)) {
-          if (periodData[cid]?.teacherId === entity.id) {
-            lesson = { ...periodData[cid], _classId: cid };
-            const cls = appData.classes.find(x => x.id === cid);
-            lesson._className = cls?.name || '?';
-            break;
+      // Forward check: is next task still feasible?
+      if(idx+1<sortedTasks.length){
+        const next=sortedTasks[idx+1];
+        const nt=D.teachers.find(x=>x.id===next.teacherId);
+        let nextFeasible=tLoad[next.teacherId]>=nt.maxLoad; // already full is ok (we'll skip)
+        if(!nextFeasible){
+          for(const dd of D.school.schoolDays){
+            if(!nt.workingDays.includes(dd)) continue;
+            for(let pp=0;pp<D.school.periods;pp++){
+              if(canPlaceCell(sched,next.teacherId,dd,pp,next.classId).ok){ nextFeasible=true; break; }
+            }
+            if(nextFeasible) break;
           }
         }
-      }
-
-      const cellId = `cell_${d}_${p}_${entity.id}`;
-      let cellClass = 'tt-cell';
-      if (isOff) cellClass += ' off-day';
-
-      const innerContent = lesson
-        ? `<div class="cell-lesson" style="background:${lesson.color || lesson._teacherColor || '#555'}">
-            <span class="cl-subject">${lesson.subject}</span>
-            <span class="cl-meta">${ttView === 'class' ? lesson._teacherName : lesson._className}</span>
-            <button class="cell-remove-btn" onclick="removeFromSchedule(${d},${p},'${ttView === 'class' ? entity.id : lesson._classId}',event)"><i class="fas fa-times"></i></button>
-          </div>`
-        : `<div class="cell-empty"><i class="fas fa-plus"></i></div>`;
-
-      cells += `<td class="${cellClass}" id="${cellId}"
-        ondragover="cellDragOver(event, this)"
-        ondragleave="cellDragLeave(this)"
-        ondrop="cellDrop(event, this, ${d}, ${p}, '${entity.id}')"
-        onclick="cellClick(${d}, ${p}, '${ttView === 'class' ? entity.id : ''}', ${!isOff && !lesson})"
-      >${innerContent}</td>`;
-    }
-    rows += `<tr>${cells}</tr>`;
-  });
-
-  container.innerHTML = `
-    <table class="tt-grid-inner" style="width:100%;border-collapse:collapse">
-      <thead><tr>${periodHeaders}</tr></thead>
-      <tbody>${rows}</tbody>
-    </table>`;
-
-  document.getElementById('tt-conflict-badge').style.display = hasConflict ? 'flex' : 'none';
-}
-
-function removeFromSchedule(d, p, classId, event) {
-  event?.stopPropagation();
-  if (appData.schedule[d]?.[p]) {
-    delete appData.schedule[d][p][classId];
-  }
-  renderTTGrid();
-  renderUnscheduledPool();
-  updateStats();
-}
-
-// ─── DRAG & DROP ───
-function cellDragOver(event, cell) {
-  event.preventDefault();
-  cell.classList.add('drag-over');
-}
-
-function cellDragLeave(cell) {
-  cell.classList.remove('drag-over');
-}
-
-function cellDrop(event, cell, day, period, entityId) {
-  event.preventDefault();
-  cell.classList.remove('drag-over');
-
-  if (!draggedLesson) return;
-
-  const { assignId, teacherId, classId, subject, color } = draggedLesson;
-
-  // Determine actual classId for this cell
-  let targetClassId = ttView === 'class' ? entityId : classId;
-  let targetTeacherId = teacherId;
-
-  // Conflict check
-  const periodSlot = appData.schedule[day]?.[period] || {};
-
-  // Teacher already scheduled?
-  const teacherBusy = Object.values(periodSlot).some(x => x?.teacherId === targetTeacherId);
-  if (teacherBusy) { showToast('المعلم مشغول في هذه الحصة!', 'error'); return; }
-
-  // Class already scheduled?
-  if (periodSlot[targetClassId]) { showToast('الفصل مشغول في هذه الحصة!', 'error'); return; }
-
-  // Teacher working this day?
-  const teacher = appData.teachers.find(t => t.id === targetTeacherId);
-  if (teacher && !teacher.workingDays.includes(day)) { showToast('المعلم لا يعمل هذا اليوم!', 'error'); return; }
-
-  // Place
-  if (!appData.schedule[day]) appData.schedule[day] = {};
-  if (!appData.schedule[day][period]) appData.schedule[day][period] = {};
-  appData.schedule[day][period][targetClassId] = { teacherId: targetTeacherId, subject, color, assignId };
-
-  draggedLesson = null;
-  renderTTGrid();
-  renderUnscheduledPool();
-  updateStats();
-}
-
-function cellClick(d, p, classId, isEmpty) {
-  // Can add quick-assign later
-}
-
-// ─── UNSCHEDULED POOL ───
-function renderUnscheduledPool() {
-  const pool = document.getElementById('unscheduled-pool');
-  pool.innerHTML = '';
-
-  const scheduled = countScheduledPerAssignment();
-  let totalUnscheduled = 0;
-
-  appData.assignments.forEach(a => {
-    const scheduledCount = scheduled[a.id] || 0;
-    const remaining = a.count - scheduledCount;
-    if (remaining <= 0) return;
-
-    totalUnscheduled += remaining;
-
-    const t = appData.teachers.find(x => x.id === a.teacherId);
-    const cls = appData.classes.find(x => x.id === a.classId);
-    if (!t || !cls) return;
-
-    // In teacher view: one card per assignment grouping
-    // In class view: separate
-    const card = document.createElement('div');
-    card.className = 'lesson-card';
-    card.style.background = t.color;
-    card.draggable = true;
-    card.innerHTML = `
-      <span class="lc-subject">${a.subject}</span>
-      <span class="lc-meta">${ttView === 'class' ? t.name : cls.name}</span>
-      <span class="lc-count">${remaining} متبقي</span>`;
-
-    card.addEventListener('dragstart', (e) => {
-      draggedLesson = { assignId: a.id, teacherId: a.teacherId, classId: a.classId, subject: a.subject, color: t.color };
-      card.classList.add('dragging');
-      e.dataTransfer.effectAllowed = 'move';
-    });
-    card.addEventListener('dragend', () => card.classList.remove('dragging'));
-
-    pool.appendChild(card);
-  });
-
-  const countEl = document.getElementById('pool-count');
-  countEl.textContent = totalUnscheduled;
-  countEl.className = 'count' + (totalUnscheduled === 0 ? ' green' : '');
-
-  if (pool.children.length === 0) {
-    pool.innerHTML = `<div class="empty-state"><i class="fas fa-check-circle" style="color:var(--success)"></i><p>جميع الحصص موزعة!</p></div>`;
-  }
-}
-
-function countScheduledPerAssignment() {
-  const counts = {};
-  Object.values(appData.schedule).forEach(day => {
-    Object.values(day).forEach(period => {
-      Object.values(period).forEach(cell => {
-        if (cell?.assignId) counts[cell.assignId] = (counts[cell.assignId] || 0) + 1;
-      });
-    });
-  });
-  return counts;
-}
-
-// ════════════════════════════════════════
-//  OVERVIEW TABLE
-// ════════════════════════════════════════
-let ovView = 'teacher';
-
-function setOvView(view) {
-  ovView = view;
-  document.getElementById('ov-teacher-btn').classList.toggle('active', view === 'teacher');
-  document.getElementById('ov-class-btn').classList.toggle('active', view === 'class');
-  renderOverview();
-}
-
-function renderOverview() {
-  const table = document.getElementById('overview-table');
-  const days = appData.school.schoolDays;
-  const periods = appData.school.periods;
-  const entities = ovView === 'teacher' ? appData.teachers : appData.classes;
-
-  if (entities.length === 0) { table.innerHTML = '<tr><td>لا يوجد بيانات</td></tr>'; return; }
-
-  // Header row 1: Day groups
-  let h1 = `<tr><th class="sticky-col" rowspan="2">${ovView === 'teacher' ? 'المعلم' : 'الفصل'}</th>`;
-  days.forEach(d => {
-    h1 += `<th colspan="${periods}" style="background:#0d1b2a">${DAY_NAMES[d]}</th>`;
-  });
-  h1 += '</tr>';
-
-  // Header row 2: Period numbers
-  let h2 = '<tr>';
-  days.forEach((d, di) => {
-    for (let p = 0; p < periods; p++) {
-      const cls = p === periods - 1 && di < days.length - 1 ? ' day-sep' : '';
-      h2 += `<th class="${cls}" style="background:#1e293b">${p + 1}</th>`;
-    }
-  });
-  h2 += '</tr>';
-
-  let rows = '';
-  entities.forEach(entity => {
-    let row = `<tr><td class="sticky-col">${entity.name}${ovView === 'teacher' ? `<br><small style="color:var(--muted);font-weight:400">${entity.subject}</small>` : ''}</td>`;
-    days.forEach((d, di) => {
-      const isOff = ovView === 'teacher' && !entity.workingDays.includes(d);
-      for (let p = 0; p < periods; p++) {
-        const cls = (p === periods - 1 && di < days.length - 1) ? ' day-sep' : '';
-        if (isOff) {
-          row += `<td class="off-cell${cls}"></td>`;
+        if(!nextFeasible){
+          // Backtrack
+          delete sched[d][p][task.classId]; tLoad[task.teacherId]--; ok--; backtracks++;
           continue;
         }
-        const periodData = appData.schedule[d]?.[p] || {};
-        let lesson = null;
-        if (ovView === 'teacher') {
-          for (const cid of Object.keys(periodData)) {
-            if (periodData[cid]?.teacherId === entity.id) {
-              const cls2 = appData.classes.find(x => x.id === cid);
-              lesson = { ...periodData[cid], label: cls2?.name || '?' };
-              break;
-            }
-          }
-        } else {
-          lesson = periodData[entity.id];
-          if (lesson) {
-            const t = appData.teachers.find(x => x.id === lesson.teacherId);
-            lesson = { ...lesson, label: t?.name?.split(' ')[0] || '?' };
-          }
-        }
-        row += lesson
-          ? `<td class="${cls}"><span class="ov-cell-lesson" style="background:${lesson.color}">${lesson.label}</span></td>`
-          : `<td class="${cls}"></td>`;
       }
-    });
-    row += '</tr>';
-    rows += row;
-  });
+      if(await bt(idx+1)) return true;
+      // If recursive call failed, backtrack
+      delete sched[d][p][task.classId]; tLoad[task.teacherId]--; ok--; backtracks++;
+    }
 
-  table.innerHTML = `<thead>${h1}${h2}</thead><tbody>${rows}</tbody>`;
-}
-
-// ════════════════════════════════════════
-//  REPORTS
-// ════════════════════════════════════════
-function renderReports() {
-  const grid = document.getElementById('reports-grid');
-  grid.innerHTML = '';
-  const days = appData.school.schoolDays;
-  const periods = appData.school.periods;
-
-  if (appData.teachers.length === 0) {
-    grid.innerHTML = `<div class="empty-state"><i class="fas fa-chart-bar"></i><p>لا يوجد بيانات لعرض التقارير.</p></div>`;
-    return;
+    // Couldn't place this task
+    fail++;
+    return await bt(idx+1); // continue without this task
   }
 
-  appData.teachers.forEach(t => {
-    let scheduled = 0;
-    days.forEach(d => {
-      for (let p = 0; p < periods; p++) {
-        const slot = appData.schedule[d]?.[p] || {};
-        if (Object.values(slot).some(x => x?.teacherId === t.id)) scheduled++;
+  await bt(0);
+  addLog(`> انتهى Backtracking. تراجعات: ${backtracks}`,'info');
+  return {sched,ok,fail};
+}
+
+// ── LOCAL SEARCH (SWAP OPTIMIZATION) ──
+async function localSearch(sched,weights,iterations,addLog,setProgress){
+  addLog(`> بدء Local Search (${iterations} تبادل)...`,'info');
+  const days=D.school.schoolDays, periods=D.school.periods;
+  let currentScore=scoreSchedule(sched);
+  addLog(`> الجودة الابتدائية: ${currentScore}/100`,'info');
+  const useSA=$q('#opt-sa').checked;
+  let temp=50, cooling=0.97; // simulated annealing params
+
+  for(let iter=0;iter<iterations;iter++){
+    // Pick two random placed lessons and try swapping them
+    const allCells=[];
+    days.forEach(d=>{ for(let p=0;p<periods;p++){ const slot=sched[d]?.[p]||{}; Object.keys(slot).forEach(cid=>{ if(slot[cid]) allCells.push({d,p,cid,data:{...slot[cid]}}); }); } });
+    if(allCells.length<2) break;
+
+    const i1=Math.floor(Math.random()*allCells.length);
+    let i2=Math.floor(Math.random()*allCells.length);
+    if(i1===i2) continue;
+    const c1=allCells[i1], c2=allCells[i2];
+
+    // Try swap: c1.data into c2 position, c2.data into c1 position
+    const chk1=canPlaceCell(sched,c1.data.teacherId,c2.d,c2.p,c1.cid,c1.d,c1.p,c1.cid);
+    const chk2=canPlaceCell(sched,c2.data.teacherId,c1.d,c1.p,c2.cid,c2.d,c2.p,c2.cid);
+    if(!chk1.ok||!chk2.ok) continue;
+
+    // Also ensure no teacher conflict after swap
+    if(c1.data.teacherId===c2.data.teacherId&&c1.d===c2.d&&c1.p===c2.p) continue;
+
+    // Do swap
+    delete sched[c1.d][c1.p][c1.cid]; delete sched[c2.d][c2.p][c2.cid];
+    if(!sched[c2.d][c2.p]) sched[c2.d][c2.p]={};
+    if(!sched[c1.d][c1.p]) sched[c1.d][c1.p]={};
+    sched[c2.d][c2.p][c1.cid]=c1.data; sched[c1.d][c1.p][c2.cid]=c2.data;
+
+    const newScore=scoreSchedule(sched);
+    const delta=newScore-currentScore;
+    // Accept if better, or (SA) accept with probability
+    const accept=delta>0||(useSA&&Math.random()<Math.exp(delta/temp));
+    if(accept){ currentScore=newScore; }
+    else{ // revert
+      delete sched[c2.d][c2.p][c1.cid]; delete sched[c1.d][c1.p][c2.cid];
+      sched[c1.d][c1.p][c1.cid]=c1.data; sched[c2.d][c2.p][c2.cid]=c2.data;
+    }
+    if(useSA) temp=Math.max(0.1,temp*cooling);
+    if(iter%100===0) setProgress(85+((iter/iterations)*13));
+  }
+  addLog(`> Local Search انتهت. الجودة النهائية: ${currentScore}/100`,'ok');
+  return currentScore;
+}
+
+async function runGen(){
+  const btn=$q('#gen-btn'), log=$q('#gen-logs'), fill=$q('#pbf'), wrap=$q('#pbw');
+  const sb=$q('#score-bar');
+  btn.disabled=true; btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> يعمل...';
+  wrap.style.display='block'; log.style.display='block'; log.innerHTML=''; fill.style.width='0%'; sb.style.display='none';
+  const addLog=(msg,cls='')=>{ log.innerHTML+=`<div class="${cls?''+cls:''}">${msg}</div>`; log.scrollTop=log.scrollHeight; };
+  const setProgress=p=>fill.style.width=p+'%';
+
+  D.schedule={}; fixSched();
+  const weights={ gap:+$q('#w-gap').value, bal:+$q('#w-bal').value, pref:+$q('#w-pref').value, comp:+$q('#w-comp').value, rep:+$q('#w-rep').value };
+
+  // Build tasks list
+  const tasks=[];
+  D.assignments.forEach(a=>{ const t=D.teachers.find(x=>x.id===a.teacherId); if(!t) return; for(let i=0;i<a.count;i++) tasks.push({teacherId:a.teacherId,classId:a.classId,subject:a.subject,color:t.color,assignId:a.id}); });
+  addLog(`> إجمالي المهام: ${tasks.length} حصة`);
+  await sleep(60);
+
+  let result;
+  if(chosenAlgo==='bt'){
+    addLog('> الخوارزمية: Backtracking + MRV + Forward Checking','info');
+    result=await runBacktracking(tasks,weights,addLog,setProgress);
+  } else {
+    addLog('> الخوارزمية: Greedy مع MRV + Slot Scoring','info');
+    result=await runGreedy(tasks,weights,addLog,setProgress);
+  }
+
+  D.schedule=result.sched;
+  addLog(`> ✓ تم وضع ${result.ok} حصة بنجاح`,'ok');
+  if(result.fail>0) addLog(`> ✗ فشل توزيع ${result.fail} حصة`,'err');
+  setProgress(85);
+
+  // Optimization pass
+  let finalScore=scoreSchedule(D.schedule);
+  if($q('#opt-ls').checked){
+    const itr=+$q('#opt-itr').value;
+    finalScore=await localSearch(D.schedule,weights,itr,addLog,setProgress);
+  }
+
+  setProgress(100);
+  addLog(`> ✅ اكتمل التوزيع! الجودة: ${finalScore}/100`,'ok');
+
+  // Show score
+  $q('#score-val').textContent=finalScore;
+  sb.style.display='flex';
+  updateDashScore(finalScore);
+  updateStats();
+  btn.disabled=false; btn.innerHTML='<i class="fas fa-play"></i> إعادة التوزيع';
+  toast(`✓ ${result.ok} حصة موزعة · جودة ${finalScore}/100`,result.ok>0?'ok':'err');
+}
+
+function updateDashScore(s){
+  const w=$q('#dash-score'); w.style.display='flex';
+  $q('#dsv').textContent=s;
+  $q('#dsbf').style.width=s+'%';
+  const desc=s>=85?'جدول ممتاز يحترم جميع القيود':s>=70?'جدول جيد مع بعض التسويات':s>=50?'جدول مقبول، يمكن التحسين يدوياً':'يحتاج مراجعة يدوية';
+  $q('#dsd').textContent=desc;
+}
+
+function clearSched(){ if(!confirm('مسح الجدول؟')) return; D.schedule={}; fixSched(); updateStats(); toast('تم المسح'); $q('#dash-score').style.display='none'; }
+
+// ══════════════════════════════════════════
+//  STATS
+// ══════════════════════════════════════════
+function updateStats(){
+  const days=D.school.schoolDays, periods=D.school.periods;
+  let sched=0;
+  days.forEach(d=>{ for(let p=0;p<periods;p++) sched+=Object.keys(D.schedule[d]?.[p]||{}).length; });
+  const total=D.assignments.reduce((s,a)=>s+a.count,0);
+  $q('#sc').textContent=D.classes.length;
+  $q('#st').textContent=D.teachers.length;
+  $q('#sa').textContent=total;
+  $q('#ss').textContent=sched;
+  $q('#su').textContent=Math.max(0,total-sched);
+  $q('#nb-c').textContent=D.classes.length;
+  $q('#nb-t').textContent=D.teachers.length;
+  $q('#nb-a').textContent=D.assignments.length;
+}
+
+// ══════════════════════════════════════════
+//  TIMETABLE + DRAG & DROP
+// ══════════════════════════════════════════
+let ttView='class', ttIdx=0;
+let drag={type:null,assignId:null,teacherId:null,classId:null,subject:null,color:null,fromD:null,fromP:null,fromC:null};
+
+function setView(v,btn){ ttView=v; ttIdx=0; $a('.vt').forEach(b=>b.classList.remove('on')); btn.classList.add('on'); renderPool(); renderGrid(); }
+function selEnt(id){ const ents=ttView==='class'?D.classes:D.teachers; const i=ents.findIndex(e=>e.id===id); if(i>=0){ ttIdx=i; renderGrid(); renderPool(); } }
+function navPrev(){ const ents=ttView==='class'?D.classes:D.teachers; if(!ents.length) return; ttIdx=(ttIdx-1+ents.length)%ents.length; renderGrid(); renderPool(); }
+function navNext(){ const ents=ttView==='class'?D.classes:D.teachers; if(!ents.length) return; ttIdx=(ttIdx+1)%ents.length; renderGrid(); renderPool(); }
+
+function countSchedMap(){
+  const m={};
+  Object.values(D.schedule).forEach(dy=>Object.values(dy).forEach(p=>Object.values(p).forEach(c=>{ if(c?.assignId) m[c.assignId]=(m[c.assignId]||0)+1; })));
+  return m;
+}
+
+function renderPool(){
+  const body=$q('#pool-body'), badge=$q('#pool-badge');
+  body.innerHTML='';
+  const sMap=countSchedMap();
+  let tot=0;
+  const ents=ttView==='class'?D.classes:D.teachers;
+  const entity=ents[ttIdx];
+
+  D.assignments.forEach(a=>{
+    const rem=a.count-(sMap[a.id]||0); if(rem<=0) return;
+    if(ttView==='class'&&entity&&a.classId!==entity.id) return;
+    if(ttView==='teacher'&&entity&&a.teacherId!==entity.id) return;
+    tot+=rem;
+    const t=D.teachers.find(x=>x.id===a.teacherId), cls=D.classes.find(x=>x.id===a.classId);
+    if(!t||!cls) return;
+    const card=document.createElement('div'); card.className='pc-card'; card.style.background=t.color; card.draggable=true; card.dataset.aid=a.id;
+    card.innerHTML=`<span class="ps">${a.subject}</span><span class="pm">${ttView==='class'?t.name:cls.name}</span><span class="pn">${rem}</span>`;
+    card.addEventListener('dragstart',e=>{ drag={type:'pool',assignId:a.id,teacherId:a.teacherId,classId:a.classId,subject:a.subject,color:t.color}; card.classList.add('dragging'); e.dataTransfer.effectAllowed='move'; showGhost(a.subject,t.color,e); });
+    card.addEventListener('dragend',()=>{ card.classList.remove('dragging'); hideGhost(); });
+    body.appendChild(card);
+  });
+
+  badge.textContent=tot; badge.style.background=tot===0?'#10b981':'#ef4444';
+  if(!body.children.length) body.innerHTML=`<div style="padding:22px 10px;text-align:center;color:#94a3b8"><i class="fas fa-check-circle" style="font-size:26px;display:block;margin-bottom:8px;color:#10b981"></i><p style="font-size:11px">${D.assignments.length?'جميع الحصص موزعة!':'لا يوجد إسناد.'}</p></div>`;
+}
+
+function renderGrid(){
+  const tbl=$q('#tbl'), days=D.school.schoolDays, periods=D.school.periods;
+  const ents=ttView==='class'?D.classes:D.teachers;
+  const sel=$q('#ent-sel');
+  if(!ents.length){ tbl.innerHTML=`<tr><td style="padding:40px;text-align:center;color:#94a3b8">أضف ${ttView==='class'?'فصولاً':'معلمين'} أولاً</td></tr>`; return; }
+  if(ttIdx>=ents.length) ttIdx=0;
+  const entity=ents[ttIdx];
+  sel.innerHTML=''; ents.forEach((e,i)=>{ const o=document.createElement('option'); o.value=e.id; o.textContent=ttView==='class'?`${e.name} - ${e.grade}`:e.name; if(i===ttIdx) o.selected=true; sel.appendChild(o); });
+
+  let html='<thead><tr><th class="eth">اليوم</th>';
+  for(let p=0;p<periods;p++) html+=`<th class="pth">ح${p+1}</th>`;
+  html+='</tr></thead><tbody>';
+
+  days.forEach(d=>{
+    const isOff=ttView==='teacher'&&!entity.workingDays.includes(d);
+    html+=`<tr><th class="dth">${DAYS[d]}</th>`;
+    for(let p=0;p<periods;p++){
+      const cellId=`c_${d}_${p}`;
+      const blk=ttView==='teacher'&&!isOff&&isBlocked(entity.id,d,p);
+      const pref=ttView==='teacher'&&!isOff&&isPreferred(entity.id,d,p);
+      let cc='tc'+(isOff?' off':blk?' blocked-slot':'');
+      html+=`<td class="${cc}" id="${cellId}" ondragover="cOver(event,this,${d},${p})" ondragleave="cLeave(this)" ondrop="cDrop(event,this,${d},${p},'${entity.id}')">`;
+      if(blk) html+=`<div style="height:100%;background:repeating-linear-gradient(45deg,#fdf4ff,#fdf4ff 3px,#f5f3ff 3px,#f5f3ff 9px);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:10px;color:#7c3aed;font-weight:700">محجوب</div>`;
+      else if(pref) html+=`<div class="cph" style="color:#10b981"><i class="fas fa-star"></i></div>`;
+      else if(isOff) html+='';
+      else html+=`<div class="cph"><i class="fas fa-plus"></i></div>`;
+      html+='</td>';
+    }
+    html+='</tr>';
+  });
+  html+='</tbody>';
+  tbl.innerHTML=html;
+
+  // Fill cells with data
+  days.forEach(d=>{
+    const isOff=ttView==='teacher'&&!entity.workingDays.includes(d);
+    for(let p=0;p<D.school.periods;p++){
+      const td=document.getElementById(`c_${d}_${p}`); if(!td) continue;
+      if(isOff||isBlocked(entity.id,d,p)&&ttView==='teacher') continue;
+      const slot=D.schedule[d]?.[p]||{};
+      let lesson=null;
+      if(ttView==='class'){
+        lesson=slot[entity.id];
+        if(lesson){ const t=D.teachers.find(x=>x.id===lesson.teacherId); lesson={...lesson,_label:t?.name||'?'}; }
+      } else {
+        for(const cid of Object.keys(slot)){ if(slot[cid]?.teacherId===entity.id){ const cls=D.classes.find(x=>x.id===cid); lesson={...slot[cid],_classId:cid,_label:cls?.name||'?'}; break; } }
+      }
+      if(lesson){
+        const fromC=ttView==='class'?entity.id:lesson._classId;
+        td.innerHTML=`<div class="cl" draggable="true" style="background:${lesson.color}"><span class="cs2">${lesson.subject}</span><span class="cm2">${lesson._label}</span><button class="cdel" onclick="removeCell(${d},${p},'${fromC}',event)"><i class="fas fa-times"></i></button></div>`;
+        const cl=td.querySelector('.cl');
+        if(cl){ cl.addEventListener('dragstart',e=>{ const fc=ttView==='class'?entity.id:lesson._classId; drag={type:'cell',assignId:lesson.assignId,teacherId:lesson.teacherId,classId:lesson.classId||fc,subject:lesson.subject,color:lesson.color,fromD:d,fromP:p,fromC:fc}; cl.classList.add('dragging'); e.dataTransfer.effectAllowed='move'; showGhost(lesson.subject,lesson.color,e); }); cl.addEventListener('dragend',()=>{ cl.classList.remove('dragging'); hideGhost(); renderGrid(); renderPool(); }); }
+      }
+    }
+  });
+}
+
+function removeCell(d,p,cid,e){ e?.stopPropagation(); if(D.schedule[d]?.[p]) delete D.schedule[d][p][cid]; renderGrid(); renderPool(); updateStats(); }
+
+function cOver(e,cell,d,p){ e.preventDefault(); if(!drag.type) return; const tc=ttView==='class'?$q('#ent-sel').value:drag.classId; const ok=canPlaceCell(D.schedule,drag.teacherId,d,p,tc,drag.fromD,drag.fromP,drag.fromC).ok; cell.classList.remove('dho','dok','dno'); cell.classList.add(ok?'dok':'dno'); }
+function cLeave(cell){ cell.classList.remove('dho','dok','dno'); }
+function cDrop(e,cell,d,p,entityId){
+  e.preventDefault(); cell.classList.remove('dho','dok','dno'); if(!drag.type) return;
+  const tCid=ttView==='class'?entityId:drag.classId;
+  const chk=canPlaceCell(D.schedule,drag.teacherId,d,p,tCid,drag.fromD,drag.fromP,drag.fromC);
+  if(!chk.ok){ toast(chk.reason,'err'); return; }
+  if(drag.type==='cell'&&drag.fromD!==null) if(D.schedule[drag.fromD]?.[drag.fromP]) delete D.schedule[drag.fromD][drag.fromP][drag.fromC];
+  if(!D.schedule[d]) D.schedule[d]={}; if(!D.schedule[d][p]) D.schedule[d][p]={};
+  D.schedule[d][p][tCid]={teacherId:drag.teacherId,subject:drag.subject,color:drag.color,assignId:drag.assignId,classId:tCid};
+  drag={type:null}; renderGrid(); renderPool(); updateStats();
+}
+function poolDrop(e){ e.preventDefault(); if(drag.type!=='cell') return; if(D.schedule[drag.fromD]?.[drag.fromP]) delete D.schedule[drag.fromD][drag.fromP][drag.fromC]; drag={type:null}; renderGrid(); renderPool(); updateStats(); toast('تم إرجاع الحصة'); }
+
+// Drag ghost
+const ghost=$q('#dg');
+function showGhost(text,color,e){ ghost.textContent=text; ghost.style.background=color; ghost.style.display='block'; document.addEventListener('dragover',mvGhost); }
+function mvGhost(e){ ghost.style.left=e.clientX+'px'; ghost.style.top=e.clientY+'px'; }
+function hideGhost(){ ghost.style.display='none'; document.removeEventListener('dragover',mvGhost); }
+document.addEventListener('dragend',()=>{ hideGhost(); drag={type:null}; });
+
+// ══════════════════════════════════════════
+//  OVERVIEW
+// ══════════════════════════════════════════
+let ovView='teacher';
+function setOV(v){ ovView=v; $q('#ovt-btn').classList.toggle('on',v==='teacher'); $q('#ovc-btn').classList.toggle('on',v==='class'); renderOV(); }
+function renderOV(){
+  const tbl=$q('#ovtbl'), days=D.school.schoolDays, periods=D.school.periods;
+  const ents=ovView==='teacher'?D.teachers:D.classes;
+  if(!ents.length){ tbl.innerHTML='<tr><td style="padding:24px;text-align:center">لا يوجد بيانات</td></tr>'; return; }
+  let h1=`<thead><tr><th class="sc" rowspan="2">${ovView==='teacher'?'المعلم':'الفصل'}</th>`;
+  days.forEach(d=>h1+=`<th colspan="${periods}">${DAYS[d]}</th>`); h1+='</tr><tr>';
+  days.forEach((d,di)=>{ for(let p=0;p<periods;p++) h1+=`<th${p===periods-1&&di<days.length-1?' class="ds"':''}>${p+1}</th>`; });
+  h1+='</tr></thead><tbody>';
+  let rows='';
+  ents.forEach(ent=>{
+    rows+=`<tr><td class="sc">${ent.name}${ovView==='teacher'?`<br><small style="color:var(--muted);font-weight:400">${ent.subject}</small>`:''}</td>`;
+    days.forEach((d,di)=>{
+      const isOff=ovView==='teacher'&&!ent.workingDays.includes(d);
+      for(let p=0;p<periods;p++){
+        const sep=p===periods-1&&di<days.length-1?' class="ds"':'';
+        if(isOff){ rows+=`<td ${sep} class="oc"></td>`; continue; }
+        const slot=D.schedule[d]?.[p]||{};
+        let lesson=null;
+        if(ovView==='teacher'){ for(const cid of Object.keys(slot)){ if(slot[cid]?.teacherId===ent.id){ const cls=D.classes.find(x=>x.id===cid); lesson={...slot[cid],label:cls?.name||'?'}; break; } } }
+        else{ lesson=slot[ent.id]; if(lesson){ const t=D.teachers.find(x=>x.id===lesson.teacherId); lesson={...lesson,label:t?.name?.split(' ')[0]||'?'}; } }
+        rows+=lesson?`<td ${sep}><span class="oc2" style="background:${lesson.color}">${lesson.label}</span></td>`:`<td ${sep}></td>`;
       }
     });
-    const total = appData.assignments.filter(a => a.teacherId === t.id).reduce((s, a) => s + a.count, 0);
-    const pct = t.maxLoad > 0 ? Math.round((scheduled / t.maxLoad) * 100) : 0;
-    const color = pct >= 90 ? '#ef4444' : pct >= 70 ? '#f59e0b' : '#10b981';
+    rows+='</tr>';
+  });
+  tbl.innerHTML=h1+rows+'</tbody>';
+}
 
-    const card = document.createElement('div');
-    card.className = 'report-card';
-    card.innerHTML = `
-      <h4>
-        <span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${t.color};margin-left:6px"></span>${t.name}</span>
-        <span class="tag" style="background:#f1f5f9;color:#475569">${t.subject}</span>
-      </h4>
-      <div class="load-bar-wrap">
-        <div class="lb-label"><span>الحصص الموزعة</span><span><strong>${scheduled}</strong> / ${t.maxLoad}</span></div>
-        <div class="load-bar"><div class="load-bar-fill" style="width:${Math.min(pct,100)}%;background:${color}"></div></div>
-      </div>
-      <div style="font-size:11px;color:var(--muted);margin-top:6px">
-        إسناد معتمد: ${total} حصة · موزع: ${scheduled} · ${pct}% من النصاب
-      </div>`;
+// ══════════════════════════════════════════
+//  REPORTS
+// ══════════════════════════════════════════
+function renderRP(){
+  const grid=$q('#rpg'), rpScore=$q('#rp-score');
+  grid.innerHTML=''; rpScore.style.display='none';
+  if(!D.teachers.length){ grid.innerHTML=`<div class="es"><i class="fas fa-chart-bar"></i><p>لا يوجد بيانات.</p></div>`; return; }
+  const days=D.school.schoolDays, periods=D.school.periods;
+  const score=scoreSchedule(D.schedule);
+  rpScore.style.display='block';
+  rpScore.innerHTML=`<div class="score-widget"><div><div class="sw-val">${score}</div><div class="sw-lbl">جودة الجدول الكلية</div><div class="sw-sub">/ 100 نقطة</div></div><div style="flex:1"><div style="height:8px;background:rgba(255,255,255,.3);border-radius:99px;overflow:hidden"><div style="height:100%;width:${score}%;background:#fff;border-radius:99px"></div></div><div style="font-size:11px;opacity:.8;margin-top:4px">${score>=85?'ممتاز':score>=70?'جيد':score>=50?'مقبول':'يحتاج تحسين'}</div></div></div>`;
+
+  D.teachers.forEach(t=>{
+    let sched=0, gaps=0;
+    days.forEach(d=>{
+      if(!t.workingDays.includes(d)) return;
+      const tPeriods=[];
+      for(let p=0;p<periods;p++) if(Object.values(D.schedule[d]?.[p]||{}).some(x=>x?.teacherId===t.id)){ sched++; tPeriods.push(p); }
+      if(tPeriods.length>1) gaps+=tPeriods[tPeriods.length-1]-tPeriods[0]+1-tPeriods.length;
+    });
+    const total=D.assignments.filter(a=>a.teacherId===t.id).reduce((s,a)=>s+a.count,0);
+    const pct=t.maxLoad>0?Math.round((sched/t.maxLoad)*100):0;
+    const col=pct>=90?'#ef4444':pct>=70?'#f59e0b':'#10b981';
+    const cst=getCst(t.id);
+    const card=document.createElement('div'); card.className='rpc';
+    card.innerHTML=`<h4><span><span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:${t.color};margin-left:5px"></span>${t.name}</span><span class="tag" style="background:#f1f5f9;color:#475569">${t.subject}</span></h4>
+    <div class="lb-w"><div class="lb-t"><span>النصاب الموزع</span><span><strong>${sched}</strong> / ${t.maxLoad}</span></div><div class="lb"><div class="lbf" style="width:${Math.min(pct,100)}%;background:${col}"></div></div></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px">
+      <div style="background:#f8fafc;border-radius:7px;padding:7px;text-align:center"><div style="font-size:10px;color:var(--muted)">إسناد</div><div style="font-size:14px;font-weight:700">${total}</div></div>
+      <div style="background:#f8fafc;border-radius:7px;padding:7px;text-align:center"><div style="font-size:10px;color:var(--muted)">فراغات</div><div style="font-size:14px;font-weight:700;color:${gaps>3?'#ef4444':'#10b981'}">${gaps}</div></div>
+      <div style="background:#f8fafc;border-radius:7px;padding:7px;text-align:center"><div style="font-size:10px;color:var(--muted)">محجوب</div><div style="font-size:14px;font-weight:700;color:var(--danger)">${cst.blocked.length}</div></div>
+    </div>`;
     grid.appendChild(card);
   });
 }
 
-// ════════════════════════════════════════
-//  STATS
-// ════════════════════════════════════════
-function updateStats() {
-  const days = appData.school.schoolDays;
-  const periods = appData.school.periods;
-  let scheduled = 0;
+// ══════════════════════════════════════════
+//  MODAL HELPERS
+// ══════════════════════════════════════════
+function openM(id){ document.getElementById(id).classList.add('on'); }
+function closeM(id){ document.getElementById(id).classList.remove('on'); }
+$a('.mov').forEach(m=>m.addEventListener('click',e=>{ if(e.target===m) m.classList.remove('on'); }));
 
-  days.forEach(d => {
-    for (let p = 0; p < periods; p++) {
-      scheduled += Object.keys(appData.schedule[d]?.[p] || {}).length;
-    }
-  });
-
-  const total = appData.assignments.reduce((s, a) => s + a.count, 0);
-  const unscheduled = Math.max(0, total - scheduled);
-
-  document.getElementById('s-classes').textContent = appData.classes.length;
-  document.getElementById('s-teachers').textContent = appData.teachers.length;
-  document.getElementById('s-total').textContent = total;
-  document.getElementById('s-scheduled').textContent = scheduled;
-  document.getElementById('s-unscheduled').textContent = unscheduled;
-  document.getElementById('nb-classes').textContent = appData.classes.length;
-  document.getElementById('nb-teachers').textContent = appData.teachers.length;
-  document.getElementById('nb-assignments').textContent = appData.assignments.length;
-}
-
-// ════════════════════════════════════════
-//  MODAL UTILS
-// ════════════════════════════════════════
-function openModal(id) { document.getElementById(id).classList.add('open'); }
-function closeModal(id) { document.getElementById(id).classList.remove('open'); }
-
-// Close on overlay click
-document.querySelectorAll('.modal-overlay').forEach(m => {
-  m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); });
-});
-
-// ════════════════════════════════════════
+// ══════════════════════════════════════════
 //  INIT
-// ════════════════════════════════════════
-function init() {
-  loadData();
-  initSettings();
-  document.getElementById('school-name-display').textContent = appData.school.name || 'غير محدد';
+// ══════════════════════════════════════════
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+function init(){
+  loadData(); initSettings();
+  $q('#school-lbl').textContent=D.school.name||'غير محدد';
   updateStats();
-
-  // Add keyboard shortcut
-  document.addEventListener('keydown', e => {
-    if ((e.ctrlKey || e.metaKey) && e.key === 's') { e.preventDefault(); saveData(); }
-  });
+  document.addEventListener('keydown',e=>{ if((e.ctrlKey||e.metaKey)&&e.key==='s'){ e.preventDefault(); saveData(); } });
 }
-
-// Add toast animation keyframes
-const style = document.createElement('style');
-style.textContent = `
-  @keyframes fadeInUp { from { opacity:0; transform:translateX(-50%) translateY(10px); } to { opacity:1; transform:translateX(-50%) translateY(0); } }
-  .tt-grid th { background: #1e293b; color: white; padding: 10px 8px; text-align: center; font-size: 12px; font-weight: 600; font-family: 'Cairo', sans-serif; }
-  .tt-grid-inner th { background: #1e293b; color: white; padding: 9px 8px; text-align: center; font-size: 12px; font-weight: 600; font-family: 'Cairo', sans-serif; }
-  .tt-grid-inner th.day-header { background: #0d1b2a; font-size: 13px; min-width: 90px; }
-  .tt-grid-inner td { border: 1px solid #e8edf3; }
-`;
-document.head.appendChild(style);
-
 init();
 </script>
 </body>
